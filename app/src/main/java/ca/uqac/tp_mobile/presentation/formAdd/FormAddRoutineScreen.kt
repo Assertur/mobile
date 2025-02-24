@@ -50,7 +50,7 @@ fun FormAddRoutineScreen(
             Column {
                 FormField(
                     icon = { Icon(
-                        painter = painterResource(id = R.drawable.ic_clock),
+                        painter = painterResource(id = R.drawable.outline_title),
                         contentDescription = "Titre",
                         modifier = Modifier.size(24.dp)
                     )},
@@ -62,7 +62,7 @@ fun FormAddRoutineScreen(
                 )
                 FormField(
                     icon = { Icon(
-                        painter = painterResource(id = R.drawable.ic_clock),
+                        painter = painterResource(id = R.drawable.outline_subtitles),
                         contentDescription = "Description",
                         modifier = Modifier.size(24.dp)
                     )},
@@ -74,7 +74,7 @@ fun FormAddRoutineScreen(
                 )
                 FormField(
                     icon = { Icon(
-                        painter = painterResource(id = R.drawable.ic_clock),
+                        painter = painterResource(id = R.drawable.outline_access_time),
                         contentDescription = "Heure",
                         modifier = Modifier.size(24.dp)
                     )},
@@ -86,7 +86,7 @@ fun FormAddRoutineScreen(
                 )
                 FormField(
                     icon = { Icon(
-                        painter = painterResource(id = R.drawable.ic_clock),
+                        painter = painterResource(id = R.drawable.outline_calendar_today),
                         contentDescription = "Date",
                         modifier = Modifier.size(24.dp)
                     )},
@@ -100,7 +100,7 @@ fun FormAddRoutineScreen(
                 )
                 FormField(
                     icon = { Icon(
-                        painter = painterResource(id = R.drawable.ic_clock),
+                        painter = painterResource(id = R.drawable.outline_location_on),
                         contentDescription = "Lieu",
                         modifier = Modifier.size(24.dp)
                     )},
@@ -112,7 +112,7 @@ fun FormAddRoutineScreen(
                 )
                 FormField(
                     icon = { Icon(
-                        painter = painterResource(id = R.drawable.ic_clock),
+                        painter = painterResource(id = R.drawable.outline_priority_high),
                         contentDescription = "Priorité",
                         modifier = Modifier.size(24.dp)
                     )},
