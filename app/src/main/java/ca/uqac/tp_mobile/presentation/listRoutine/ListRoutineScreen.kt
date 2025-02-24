@@ -31,7 +31,7 @@ fun ListRoutineScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {navController.navigate(Screen.ListRoutineScreen.route)}) {
+            FloatingActionButton(onClick = {navController.navigate(Screen.FormAddRoutine.route)}) {
                 Icon(imageVector = Icons.Default.Add,
                     contentDescription = "Add a story")
             }
