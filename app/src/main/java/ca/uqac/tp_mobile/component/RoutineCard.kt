@@ -22,10 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.presentation.RoutineVM
 
     @Composable
@@ -93,7 +95,7 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    Icon(Icons.Filled.DateRange, contentDescription = "Date")
+                    Icon(painter = painterResource(id = R.drawable.outline_access_time), contentDescription = "Date")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         routine.day,

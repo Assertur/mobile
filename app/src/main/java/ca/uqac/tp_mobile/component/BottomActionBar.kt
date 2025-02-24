@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import ca.uqac.tp_mobile.R
 
 @Composable
 fun BottomActionBar(onDelete: () -> Unit) {
@@ -40,7 +42,7 @@ fun BottomActionBar(onDelete: () -> Unit) {
                         disabledContentColor = Color.Gray
                     )
                 ) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                    Icon(painter = painterResource(id = R.drawable.outline_delete), contentDescription = "Delete")
                 }
                 Text("Supprimer",
                     style = TextStyle(
