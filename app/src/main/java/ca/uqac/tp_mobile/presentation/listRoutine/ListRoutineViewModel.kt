@@ -24,7 +24,7 @@ class ListRoutineViewModel: ViewModel() {
         }
     }
     private fun deleteStory(routine: RoutineVM) {
-        _routines.value = _routines.value.filter { it != routine }
+        _routines.value = _routines.value.filter { it.id != routine.id }
         deleteRoutineFromList(routine)
     }
 }
