@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ca.uqac.tp_mobile.navigation.Screen
+import ca.uqac.tp_mobile.presentation.formAdd.FormAddRoutineScreen
+import ca.uqac.tp_mobile.presentation.formAdd.FormAddRoutineViewModel
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineScreen
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineViewModel
 import ca.uqac.tp_mobile.ui.theme.TP_MobileTheme
@@ -25,7 +27,7 @@ class MainActivity : ComponentActivity() {
             TP_MobileTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val stories = viewModel<ListRoutineViewModel>()
-                    //val addEditStories = viewModel<AddEditStoryViewModel>()
+                    val addStories = viewModel<FormAddRoutineViewModel>()
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
                     ){
                         composable(Screen.ListRoutineScreen.route){ ListRoutineScreen(stories, navController) }
-                        //composable(Screen.AddEditStoryScreen.route){ AddEditStoryScreen(navController,addEditStories)}
+                        composable(Screen.FormAddRoutine.route){ FormAddRoutineScreen(addStories,navController) }
                     }
                 }
             }
