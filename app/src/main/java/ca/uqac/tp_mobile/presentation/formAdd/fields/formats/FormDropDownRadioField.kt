@@ -11,6 +11,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,24 +25,19 @@ fun FormDropDownRadioField(
     value: String,
     onValueChange: (String) -> Unit,
     options: List<String>,
-    placeholder : String) {
-
-    var expanded by remember { mutableStateOf(false) }
+    placeholder : String,
+    expanded : MutableState<Boolean>) {
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        BasicTextField(
-            value = if (value.isEmpty()) {
-                placeholder
-            }else{
-                value
-            },
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth().clickable { expanded = true }
-        )
+        Text(if (value.isEmpty()) {
+            placeholder
+        }else{
+            value
+        })
 
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false }
         ) {
             Column {
                 options.forEach { option ->
@@ -51,7 +47,7 @@ fun FormDropDownRadioField(
                             .fillMaxWidth()
                             .clickable {
                                 onValueChange(option)  // Met à jour la valeur sélectionnée
-                                expanded = false        // Ferme le menu après sélection
+                                expanded.value = false        // Ferme le menu après sélection
                             }
                             .padding(8.dp)
                     ) {
