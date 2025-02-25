@@ -52,7 +52,7 @@ class FormAddRoutineViewModel : ViewModel() {
 
     fun onDateChange (date : String) {
         if (date in _date.value) {
-            _date.value.filter { it != date }
+            _date.value = _date.value.filter { it != date }
         }else{
             _date.value += listOf(date)
         }
@@ -66,14 +66,16 @@ class FormAddRoutineViewModel : ViewModel() {
         _priority.value = priority
     }
 
-    fun confirm () {
+    fun confirm () : Boolean{
         // ajouter hour, date et priority
         if (_priority.value.isBlank() || _title.value.isBlank() || _date.value.isEmpty() || _hour.value.isBlank() || _location.value.isBlank())
         {
+            _error.value = "Tous les champs avec * doivent être remplis"
+            return false
+        }else{
             val newRoutine = RoutineVM(getRoutines().size, _title.value, _desc.value)
             addOrUpdateRoutine(newRoutine)
-        }else{
-            _error.value = "Tous les champs avec * doivent être remplis"
+            return true
         }
     }
 }

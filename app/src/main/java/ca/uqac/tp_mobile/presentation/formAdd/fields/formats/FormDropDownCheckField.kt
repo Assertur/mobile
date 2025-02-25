@@ -11,6 +11,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,29 +25,21 @@ fun FormDropDownCheckField(
     selectedOptions: List<String>,
     onOptionChange: (String) -> Unit,
     options: List<String>,
-    placeholder : String
+    placeholder : String,
+    expanded : MutableState<Boolean>
 ) {
-    var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        BasicTextField(
-            value = if (selectedOptions.isEmpty()) {
-                placeholder
-            }else{
-                var s = ""
-                for (i in selectedOptions){
-                    s = "$s, $i"
-                }
-                s
-            },
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth().clickable { expanded = true }
-        )
+        Text(if (selectedOptions.isEmpty()) {
+            placeholder
+        }else{
+            selectedOptions.joinToString(", ")
+        })
 
         // Menu déroulant personnalisé
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false }
         ) {
             Column {
                 options.forEach { option ->
