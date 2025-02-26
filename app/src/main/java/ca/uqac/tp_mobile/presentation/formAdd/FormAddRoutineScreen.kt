@@ -15,23 +15,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.currentCompositionLocalContext
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.navigation.Screen
+import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.formAdd.fields.FormField
 import ca.uqac.tp_mobile.presentation.formAdd.fields.formats.*
 
@@ -151,7 +152,7 @@ fun FormAddRoutineScreen(
                     field = { FormDropDownCheckField(
                         selectedOptions = viewModel.date.value,
                         onOptionChange = { newValue -> viewModel.onDateChange(newValue) },
-                        options = listOf("Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"),
+                        options = Day.entries.map { it.label },
                         placeholder = "Jour(s) de la routine",
                         expanded = dateExpanded
                     ) },

@@ -40,6 +40,8 @@ import ca.uqac.tp_mobile.component.BottomActionBarWithModification
 import ca.uqac.tp_mobile.component.RoutinePresentationField
 import ca.uqac.tp_mobile.navigation.Screen
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.presentation.formatDaysForLongDisplay
+import ca.uqac.tp_mobile.presentation.formatDaysForShortDisplay
 import ca.uqac.tp_mobile.presentation.getRoutineById
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineViewModel
 import ca.uqac.tp_mobile.presentation.listRoutine.RoutineEvent
@@ -162,7 +164,7 @@ fun RoutineDetailsScreen(
                                 )
                             },
                             titleText = "Jour(s)",
-                            contentText = routine.day
+                            contentText = routine.day.formatDaysForLongDisplay()
                         )
 
                         RoutinePresentationField(

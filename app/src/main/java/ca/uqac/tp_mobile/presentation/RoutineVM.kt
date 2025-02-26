@@ -20,7 +20,7 @@ data class RoutineVM(
     val id: Int = 0,
     val title: String = "",
     val description: String = "",
-    val day : String = "",
+    val day : List<Day> = listOf(),
     val hour: String = "",
     val location: String = "",
     val priority : Priority = Priority.BASSE,

@@ -1,9 +1,12 @@
 package ca.uqac.tp_mobile.presentation.formAdd
 
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.Priority
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.presentation.addOrUpdateRoutine
@@ -84,7 +87,7 @@ class FormAddRoutineViewModel : ViewModel() {
                 _title.value = r.title
                 _desc.value = r.description
                 _hour.value = r.hour
-                _date.value = r.day.split(", ")
+                _date.value = r.day.map { it.label }
                 _location.value = r.location
                 _priority.value = r.priority.label
             }
@@ -99,19 +102,25 @@ class FormAddRoutineViewModel : ViewModel() {
         // ajouter hour, date et priority
         if (_priority.value.isBlank() || _title.value.isBlank() || _date.value.isEmpty() || _hour.value.isBlank() || _location.value.isBlank())
         {
-            _error.value = "Tous les champs avec * doivent être remplis"
+            _error.value = "Tous les champs avec * doivent être remplis."
             return false
         }else{
             val newRoutine = RoutineVM(
-                currentRoutineId ?: (getLastId() + 1),
+                currentRoutineId.takeIf { it != -1 } ?: (getLastId() + 1),
                 _title.value,
                 _desc.value,
-                _date.value.toString().trim('[', ']'),
+                _date.value.map { dayString ->
+                    Day.entries.find { it.label == dayString } ?: throw IllegalArgumentException("Jour invalide: $dayString")
+                },
                 _hour.value,
                 _location.value,
                 priority = Priority.fromString(_priority.value)
             )
-            addOrUpdateRoutine(newRoutine)
+            val wasAdded = addOrUpdateRoutine(newRoutine)
+            if (!wasAdded) {
+                _error.value = "Une erreur est survenue. Veuillez réessayer."
+                return false
+            }
             resetFields()
             return true
         }

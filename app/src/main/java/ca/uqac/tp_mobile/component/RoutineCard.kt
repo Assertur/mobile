@@ -29,8 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.presentation.formatDaysForShortDisplay
 
-    @Composable
+@Composable
     fun RoutineCard(routine : RoutineVM, isSelected : Boolean, onLongPress : () -> Unit, onClick : () -> Unit) {
         val backgroundColor = if (isSelected) {
             remember { mutableStateOf(routine.priority.type.selectedColor) } // Couleur sélectionnée
@@ -99,7 +100,7 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
                     Icon(painter = painterResource(id = R.drawable.outline_access_time), contentDescription = "Date")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        routine.day,
+                        routine.day.formatDaysForShortDisplay(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = routine.priority.type.foregroundColor
