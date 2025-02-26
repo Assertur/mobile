@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,7 +86,8 @@ fun FormAddRoutineScreen(
                 style = TextStyle(
                     fontSize = 36.sp,
                     textAlign = TextAlign.Center,
-                    color = primaryTextColor
+                    color = primaryTextColor,
+                    fontWeight = FontWeight.Bold
                 )
             )
             Column( verticalArrangement = Arrangement.spacedBy(20.dp)) {

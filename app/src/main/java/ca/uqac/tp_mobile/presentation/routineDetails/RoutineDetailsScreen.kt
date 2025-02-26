@@ -98,7 +98,8 @@ fun RoutineDetailsScreen(
                     style = TextStyle(
                         fontSize = 36.sp,
                         textAlign = TextAlign.Center,
-                        color = secondaryColor
+                        color = secondaryColor,
+                        fontWeight = FontWeight.Bold
                     )
                 )
                 Scaffold(

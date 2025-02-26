@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +72,7 @@ fun ListRoutineScreen(
                 .fillMaxSize()
         ) {
             Text(
-                text = "User Stories",
+                text = "Routines",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -79,7 +80,8 @@ fun ListRoutineScreen(
                     fontSize = 36.sp,
                     textAlign = TextAlign.Center
                 ),
-                color = Color(244,244,251)
+                color = Color(244,244,251),
+                fontWeight = FontWeight.Bold
             )
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 16.dp)
