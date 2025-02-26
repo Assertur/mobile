@@ -32,7 +32,7 @@ fun FormField(
             .padding(horizontal = 25.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
-            .background(Color.White)
+            .background(Color(0xFFF4F4FB))
             .clickable { onClick() }
             .border(2.dp, Color(0xFFD1D4FF), RoundedCornerShape(18.dp))
     ) {
