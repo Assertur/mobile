@@ -43,7 +43,7 @@ fun ListRoutineScreen(
     var selectedRoutine by remember { mutableStateOf<List<RoutineVM>>(listOf()) }
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {navController.navigate(Screen.FormAddRoutine.route)}, containerColor = Color(0xFF00141F), shape = RoundedCornerShape(18.dp)) {
+            FloatingActionButton(onClick = {navController.navigate(Screen.FormAddRoutine.createRoute(-1))}, containerColor = Color(0xFF00141F), shape = RoundedCornerShape(18.dp)) {
                 Icon(imageVector = Icons.Default.Add,
                     contentDescription = "Add a story",
                     tint = Color(0xFFF4F4FB),
@@ -84,6 +84,7 @@ fun ListRoutineScreen(
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
+                viewModel.sortRoutines()
                 items(viewModel.routines.value, key = { it.id }) { routine ->
                     RoutineCard(
                         routine,

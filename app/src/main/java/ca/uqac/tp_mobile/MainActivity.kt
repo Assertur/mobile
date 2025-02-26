@@ -41,14 +41,33 @@ class MainActivity : ComponentActivity() {
 
                     ){
                         composable(Screen.ListRoutineScreen.route){ ListRoutineScreen(stories, navController) }
-                        composable(Screen.FormAddRoutine.route){ FormAddRoutineScreen(addStories,navController) }
+                        composable(
+                            route = Screen.FormAddRoutine.route,
+                            arguments = listOf(navArgument("routineId") {
+                                type = NavType.IntType
+                                defaultValue = -1
+                            })
+                        ) { backStackEntry ->
+                            val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
+                            addStories.loadRoutine(routineId)
+                            FormAddRoutineScreen(
+                                addStories,
+                                navController
+                            )
+                        }
                         composable(
                             route = Screen.RoutineDetails.route,
                             arguments = listOf(navArgument("routineId") { type = NavType.IntType })
                         ) { backStackEntry ->
                             val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
-                            RoutineDetailsScreen(routineId = routineId, viewModel = routine, listRoutineViewModel = stories, navController = navController)
-                        }                    }
+                            RoutineDetailsScreen(
+                                routineId = routineId,
+                                viewModel = routine,
+                                listRoutineViewModel = stories,
+                                navController = navController
+                            )
+                        }
+                    }
                 }
             }
         }

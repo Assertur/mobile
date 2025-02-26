@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -19,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,9 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,6 +40,7 @@ import ca.uqac.tp_mobile.component.BottomActionBarWithModification
 import ca.uqac.tp_mobile.component.RoutinePresentationField
 import ca.uqac.tp_mobile.navigation.Screen
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.presentation.getRoutineById
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineViewModel
 import ca.uqac.tp_mobile.presentation.listRoutine.RoutineEvent
 
@@ -56,7 +52,7 @@ fun RoutineDetailsScreen(
     navController: NavController
 ) {
     LaunchedEffect(routineId) {
-        val routine = listRoutineViewModel.getRoutineById(routineId)
+        val routine = getRoutineById(routineId)
         routine?.let { viewModel.setSelectedRoutine(it) }
     }
     val selectedRoutine by viewModel.selectedRoutine.collectAsState()
@@ -74,7 +70,9 @@ fun RoutineDetailsScreen(
                     RoutineEvent.Delete(routine)
                 )
                 navController.navigate(Screen.ListRoutineScreen.route)
-            }, onEdit = {}) // FIXME : à finir
+            }, onEdit = {
+                navController.navigate(Screen.FormAddRoutine.createRoute(routineId))
+            })
         }) { outerPadding ->
             Column(
                 Modifier
@@ -109,9 +107,11 @@ fun RoutineDetailsScreen(
                         .padding(horizontal = 25.dp)
                         .clip(RoundedCornerShape(32.dp)), containerColor = secondaryColor
                 ) { innerPadding ->
-                    Column(modifier = Modifier
-                        .padding(innerPadding)
-                        .verticalScroll(scrollState)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .verticalScroll(scrollState)
+                    ) {
                         RoutinePresentationField(
                             icon = {
                                 Icon(
@@ -184,17 +184,34 @@ fun RoutineDetailsScreen(
                                     .padding(horizontal = 25.dp)
                                     .fillMaxWidth()
                             ) {
-                                Spacer(modifier = Modifier.padding(horizontal = 15.dp, vertical = 40.dp))
+                                Spacer(
+                                    modifier = Modifier.padding(
+                                        horizontal = 15.dp,
+                                        vertical = 40.dp
+                                    )
+                                )
                                 Icon(
                                     painter = painterResource(id = R.drawable.outline_priority_high),
                                     contentDescription = "Priorité",
                                     modifier = Modifier.size(24.dp),
                                     tint = primaryColor
                                 )
-                                Text(text = "Priorité", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF000547))
+                                Text(
+                                    text = "Priorité",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF000547)
+                                )
                             }
                             // FIXME : aligner le texte verticalement
-                            Box(Modifier.background(routine.priority.type.backgroundColor)) { Text(text = routine.priority.label, fontSize = 18.sp, color = Color(0xFF000547), modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically)) }
+                            Box(Modifier.background(routine.priority.type.backgroundColor)) {
+                                Text(
+                                    text = routine.priority.label,
+                                    fontSize = 18.sp,
+                                    color = Color(0xFF000547),
+                                    modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically)
+                                )
+                            }
                         }
                     }
 

@@ -99,6 +99,10 @@ fun getRoutines(): List<RoutineVM> {
     return routineList
 }
 
+fun getRoutineById(id : Int) : RoutineVM? {
+    return routineList.find{ it.id == id}
+}
+
 fun addOrUpdateRoutine(routine: RoutineVM) {
     val existingStory = routineList.find { it.id == routine.id }
     existingStory?.let {

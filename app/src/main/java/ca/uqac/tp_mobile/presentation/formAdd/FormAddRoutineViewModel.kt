@@ -8,8 +8,11 @@ import ca.uqac.tp_mobile.presentation.Priority
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.presentation.addOrUpdateRoutine
 import ca.uqac.tp_mobile.presentation.getLastId
+import ca.uqac.tp_mobile.presentation.getRoutineById
 
 class FormAddRoutineViewModel : ViewModel() {
+
+    var currentRoutineId : Int = -1
 
     //TODO : Vérifier les entrées pour plus de sécurité
 
@@ -73,6 +76,25 @@ class FormAddRoutineViewModel : ViewModel() {
         _error.value = ""
     }
 
+    fun loadRoutine(routineId: Int) {
+        if (routineId != -1) {
+            val routine = getRoutineById(routineId)
+            routine?.let { r ->
+                currentRoutineId = r.id
+                _title.value = r.title
+                _desc.value = r.description
+                _hour.value = r.hour
+                _date.value = r.day.split(", ")
+                _location.value = r.location
+                _priority.value = r.priority.label
+            }
+        }
+        else {
+            resetFields()
+            currentRoutineId = -1
+        }
+    }
+
     fun confirm () : Boolean{
         // ajouter hour, date et priority
         if (_priority.value.isBlank() || _title.value.isBlank() || _date.value.isEmpty() || _hour.value.isBlank() || _location.value.isBlank())
@@ -80,7 +102,15 @@ class FormAddRoutineViewModel : ViewModel() {
             _error.value = "Tous les champs avec * doivent être remplis"
             return false
         }else{
-            val newRoutine = RoutineVM(getLastId() + 1, _title.value, _desc.value, _date.value.toString().trim('[', ']'), _hour.value, _location.value, priority = Priority.fromString(_priority.value))
+            val newRoutine = RoutineVM(
+                currentRoutineId ?: (getLastId() + 1),
+                _title.value,
+                _desc.value,
+                _date.value.toString().trim('[', ']'),
+                _hour.value,
+                _location.value,
+                priority = Priority.fromString(_priority.value)
+            )
             addOrUpdateRoutine(newRoutine)
             resetFields()
             return true

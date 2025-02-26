@@ -49,6 +49,8 @@ fun FormAddRoutineScreen(
     navController: NavController
 ) {
 
+    val isEditing = viewModel.currentRoutineId != -1
+
     val scrollState = rememberScrollState()
 
     val iconColor = Color(0xFF00141F)
@@ -77,7 +79,7 @@ fun FormAddRoutineScreen(
             }
 
             Text(
-                text = "Ajouter une routine",
+                text = if (isEditing) "Modifier la routine" else "Ajouter une routine",
                 modifier = Modifier
                     .padding(horizontal = 25.dp, vertical = 16.dp),
                 style = TextStyle(
