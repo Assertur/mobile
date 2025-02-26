@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,9 +32,9 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
     @Composable
     fun RoutineCard(routine : RoutineVM, isSelected : Boolean, onLongPress : () -> Unit, onClick : () -> Unit) {
         val backgroundColor = if (isSelected) {
-            remember { mutableStateOf(routine.priorityType.selectedColor) } // Couleur sélectionnée
+            remember { mutableStateOf(routine.priority.type.selectedColor) } // Couleur sélectionnée
         } else {
-            remember { mutableStateOf(routine.priorityType.backgroundColor) } // Couleur de fond par défaut
+            remember { mutableStateOf(routine.priority.type.backgroundColor) } // Couleur de fond par défaut
         }
         Box(modifier = Modifier
             .fillMaxSize()
@@ -50,9 +49,9 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
                     onLongPress = {
                         onLongPress()
                         if (!routine.selected) {
-                            backgroundColor.value = routine.priorityType.selectedColor
+                            backgroundColor.value = routine.priority.type.selectedColor
                         } else {
-                            backgroundColor.value = routine.priorityType.backgroundColor
+                            backgroundColor.value = routine.priority.type.backgroundColor
                         }
                         routine.selected = !routine.selected
                     }
@@ -69,10 +68,10 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(routine.name,
+                    Text(routine.title,
                         style = TextStyle(
                             fontSize = 20.sp,
-                            color = routine.priorityType.foregroundColor
+                            color = routine.priority.type.foregroundColor
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis)
@@ -84,10 +83,10 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
                 ) {
                     Icon(Icons.Filled.LocationOn, contentDescription = "Place")
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(routine.place,
+                    Text(routine.location,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = routine.priorityType.foregroundColor)
+                        color = routine.priority.type.foregroundColor)
                 }
 
                 Row(
@@ -101,14 +100,14 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
                         routine.day,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = routine.priorityType.foregroundColor
+                        color = routine.priority.type.foregroundColor
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         routine.hour,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = routine.priorityType.foregroundColor
+                        color = routine.priority.type.foregroundColor
                     )
                 }
             }

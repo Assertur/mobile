@@ -1,5 +1,6 @@
 package ca.uqac.tp_mobile.presentation.listRoutine
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -56,14 +57,14 @@ fun ListRoutineScreen(
                     }
                 )
             }
-        }
+        },
+        containerColor = Color(0xFF000547)
     ) { contentPadding ->
         Column(
             Modifier
                 .padding(contentPadding)
                 .padding(horizontal = 10.dp)
                 .fillMaxSize()
-                .background(Color(0,5,47))
         ) {
             Text(
                 text = "User Stories",
@@ -93,7 +94,7 @@ fun ListRoutineScreen(
                             }
                         },
                        onClick = {
-                            //changer de page pour la modification
+                            // TODO : changer de page pour la modification
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))

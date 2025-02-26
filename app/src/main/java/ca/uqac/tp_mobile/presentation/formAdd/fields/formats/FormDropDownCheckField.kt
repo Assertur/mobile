@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -29,12 +30,14 @@ fun FormDropDownCheckField(
     expanded : MutableState<Boolean>
 ) {
 
+    val textColor = Color(0xFF000547)
+
     Box(modifier = Modifier.fillMaxWidth()) {
         Text(if (selectedOptions.isEmpty()) {
             placeholder
         }else{
             selectedOptions.joinToString(", ")
-        })
+        }, color = textColor)
 
         // Menu déroulant personnalisé
         DropdownMenu(
@@ -54,7 +57,8 @@ fun FormDropDownCheckField(
                     ) {
                         Text(
                             text = option,
-                            modifier = Modifier.padding(start = 8.dp)
+                            modifier = Modifier.padding(start = 8.dp),
+                            color = textColor
                         )
                         Checkbox(
                             checked = selectedOptions.contains(option),  // Coche la checkbox si l'option est sélectionnée

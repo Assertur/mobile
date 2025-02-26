@@ -2,15 +2,29 @@ package ca.uqac.tp_mobile.presentation
 
 import androidx.compose.ui.graphics.Color
 
+enum class Priority(val value: Int, val label: String, val type: PriorityType) {
+    HAUTE(1, "Haute", HighPriority),
+    MOYENNE(2, "Moyenne", StandardPriority),
+    BASSE(3, "Basse", LowPriority);
+
+    companion object {
+        fun fromString(label: String): Priority {
+            return entries.find { it.label.equals(label, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Priorité non valide: $label")
+        }
+    }
+}
+
+
 data class RoutineVM(
     val id: Int = 0,
-    val name: String = "",
+    val title: String = "",
     val description: String = "",
     val day : String = "",
     val hour: String = "",
-    val place: String = "",
-    var selected : Boolean = false,
-    val priorityType: PriorityType = StandardPriority
+    val location: String = "",
+    val priority : Priority = Priority.BASSE,
+    var selected : Boolean = false
 )
 
 sealed class PriorityType(

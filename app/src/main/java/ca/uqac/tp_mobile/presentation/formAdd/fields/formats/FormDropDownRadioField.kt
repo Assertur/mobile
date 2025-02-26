@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -28,12 +29,12 @@ fun FormDropDownRadioField(
     placeholder : String,
     expanded : MutableState<Boolean>) {
 
+    val textColor = Color(0xFF000547)
+
     Box(modifier = Modifier.fillMaxWidth()) {
-        Text(if (value.isEmpty()) {
+        Text(value.ifEmpty {
             placeholder
-        }else{
-            value
-        })
+        }, color = textColor)
 
         DropdownMenu(
             expanded = expanded.value,
@@ -51,7 +52,7 @@ fun FormDropDownRadioField(
                             }
                             .padding(8.dp)
                     ) {
-                        Text(option)
+                        Text(option, color = textColor)
                     }
                 }
             }

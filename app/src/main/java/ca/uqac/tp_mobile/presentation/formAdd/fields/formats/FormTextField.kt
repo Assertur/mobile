@@ -19,7 +19,7 @@ fun FormTextField(value: String, onValueChange: (String) -> Unit, placeholder: S
         if (value.isEmpty()) {
             Text(
                 text = placeholder,
-                color = Color.Gray,
+                color = Color(0x80000547),
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = 16.dp)  // Ajuste la position du placeholder
@@ -30,7 +30,7 @@ fun FormTextField(value: String, onValueChange: (String) -> Unit, placeholder: S
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            textStyle = TextStyle(color = Color.Black),
+            textStyle = TextStyle(color = Color(0xFF000547)),
             modifier = Modifier.fillMaxWidth().padding(start = 16.dp)  // Aligner correctement le texte
         )
     }

@@ -43,11 +43,9 @@ fun FormTimeField(
         true
     )
     Box(modifier = Modifier.fillMaxWidth()) {
-        Text(if (value.isEmpty()) {
+        Text(value.ifEmpty {
             placeholder
-        }else{
-            value
-        })
+        }, color = Color(0xFF000547))
         if (expanded.value) {
             timePickerDialog.show()
         }
