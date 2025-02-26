@@ -27,4 +27,8 @@ class ListRoutineViewModel: ViewModel() {
         _routines.value = _routines.value.filter { it.id != routine.id }
         deleteRoutineFromList(routine)
     }
+    fun getRoutineById(routineId : Int) : RoutineVM? {
+        return _routines.value.find { it.id == routineId }
+
+    }
 }

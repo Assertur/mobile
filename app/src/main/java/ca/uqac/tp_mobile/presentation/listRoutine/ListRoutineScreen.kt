@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -41,9 +43,11 @@ fun ListRoutineScreen(
     var selectedRoutine by remember { mutableStateOf<List<RoutineVM>>(listOf()) }
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {navController.navigate(Screen.FormAddRoutine.route)}) {
+            FloatingActionButton(onClick = {navController.navigate(Screen.FormAddRoutine.route)}, containerColor = Color(0xFF00141F), shape = RoundedCornerShape(18.dp)) {
                 Icon(imageVector = Icons.Default.Add,
-                    contentDescription = "Add a story")
+                    contentDescription = "Add a story",
+                    tint = Color(0xFFF4F4FB),
+                    modifier = Modifier.padding(20.dp).size(35.dp))
             }
         },
         bottomBar = {
@@ -94,7 +98,7 @@ fun ListRoutineScreen(
                             }
                         },
                        onClick = {
-                            // TODO : changer de page pour la modification
+                           navController.navigate(Screen.RoutineDetails.createRoute(routine.id))
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
