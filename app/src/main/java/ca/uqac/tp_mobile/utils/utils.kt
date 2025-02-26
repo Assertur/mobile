@@ -1,9 +1,8 @@
-package ca.uqac.tp_mobile.presentation
+package ca.uqac.tp_mobile.utils
 
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.runtime.currentCompositionLocalContext
-import kotlin.coroutines.coroutineContext
+import ca.uqac.tp_mobile.presentation.Day
+import ca.uqac.tp_mobile.presentation.Priority
+import ca.uqac.tp_mobile.presentation.RoutineVM
 
 private val routineList: MutableList<RoutineVM> = mutableListOf(
     RoutineVM(
@@ -14,8 +13,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "07H00",
         location = "Gym",
         priority = Priority.HAUTE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 2,
         title = "Routine 2",
         description = "Tâches de travail",
@@ -23,8 +21,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "09H00",
         location = "Travail",
         priority = Priority.MOYENNE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 3,
         title = "Routine 3",
         description = "Pause déjeuner",
@@ -32,8 +29,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "12H00",
         location = "Travail",
         priority = Priority.MOYENNE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 4,
         title = "Routine 4",
         description = "Réunion avec l'équipe",
@@ -41,8 +37,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "14H00",
         location = "Travail",
         priority = Priority.HAUTE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 5,
         title = "Routine 5",
         description = "Séance de l'après-midi",
@@ -50,8 +45,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "17H00",
         location = "À la maison",
         priority = Priority.BASSE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 6,
         title = "Routine 6",
         description = "Dîner",
@@ -59,8 +53,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "19H00",
         location = "À la maison",
         priority = Priority.MOYENNE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 7,
         title = "Routine 7",
         description = "Temps de lecture",
@@ -68,8 +61,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "08H00",
         location = "À la maison",
         priority = Priority.BASSE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 8,
         title = "Routine 8",
         description = "Projet de travail",
@@ -77,8 +69,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "10H00",
         location = "Travail",
         priority = Priority.HAUTE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 9,
         title = "Routine 9",
         description = "Temps en famille",
@@ -86,8 +77,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         hour = "18H00",
         location = "Parc",
         priority = Priority.MOYENNE
-    ),
-    RoutineVM(
+    ), RoutineVM(
         id = 10,
         title = "Routine 10",
         description = "Soirée relax",
@@ -98,38 +88,22 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
     )
 )
 
-private var lastId: Int = 10
-
 fun getRoutines(): List<RoutineVM> {
     return routineList
 }
 
-fun getRoutineById(id : Int) : RoutineVM? {
-    return routineList.find{ it.id == id}
+fun getRoutineById(routineId: Int): RoutineVM {
+    return getRoutines().find { it.id == routineId } ?: RoutineVM()
 }
 
-fun addOrUpdateRoutine(routine: RoutineVM) : Boolean {
-    val existingStory = routineList.find { it.id == routine.id }
-    existingStory?.let {
+fun addOrUpdateRoutine(routine: RoutineVM) {
+    val existingRoutine = routineList.find { it.id == routine.id }
+    existingRoutine?.let {
         routineList.remove(it)
     }
-    val wasAdded = routineList.add(routine)
-    Log.d(null, "La liste : $routineList")
-    if (!wasAdded) {
-        Log.d(null, "SKIBIDI DOP DOP")
-        return false
-    }
-    else {
-        Log.d(null, "LE WAS ADDED EST OK")
-        lastId++
-        return true
-    }
+    routineList.add(routine)
 }
 
 fun deleteRoutineFromList(routine: RoutineVM) {
     routineList.remove(routine)
-}
-
-fun getLastId(): Int {
-    return lastId
 }

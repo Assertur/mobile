@@ -1,7 +1,5 @@
 package ca.uqac.tp_mobile.presentation.listRoutine
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,39 +29,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import ca.uqac.tp_mobile.component.BottomActionBar
-import ca.uqac.tp_mobile.component.RoutineCard
 import ca.uqac.tp_mobile.navigation.Screen
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.presentation.components.BottomActionBar
+import ca.uqac.tp_mobile.presentation.components.RoutineCard
 
 @Composable
 fun ListRoutineScreen(
-    viewModel: ListRoutineViewModel,
-    navController: NavController
+    viewModel: ListRoutineViewModel, navController: NavController
 ) {
     var selectedRoutine by remember { mutableStateOf<List<RoutineVM>>(listOf()) }
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {navController.navigate(Screen.FormAddRoutine.createRoute(-1))}, containerColor = Color(0xFF00141F), shape = RoundedCornerShape(18.dp)) {
-                Icon(imageVector = Icons.Default.Add,
-                    contentDescription = "Add a story",
-                    tint = Color(0xFFF4F4FB),
-                    modifier = Modifier.padding(20.dp).size(35.dp))
-            }
-        },
-        bottomBar = {
-            if(selectedRoutine.isNotEmpty()) {
-                BottomActionBar(
-                    onDelete = {
-                        selectedRoutine.forEach { routine ->
-                            viewModel.onEvent(RoutineEvent.Delete(routine))
-                        }
-                        selectedRoutine = listOf()
-                    }
-                )
-            }
-        },
-        containerColor = Color(0xFF000547)
+    Scaffold(floatingActionButton = {
+        FloatingActionButton(onClick = {
+            navController.navigate(
+                Screen.AddEditRoutine.route
+            )
+        }, containerColor = Color(0xFF00141F), shape = RoundedCornerShape(18.dp)) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add a story",
+                tint = Color(0xFFF4F4FB),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .size(35.dp)
+            )
+        }
+    }, bottomBar = {
+        if (selectedRoutine.isNotEmpty()) {
+            BottomActionBar(onDelete = {
+                selectedRoutine.forEach { routine ->
+                    viewModel.onEvent(RoutineEvent.Delete(routine))
+                }
+                selectedRoutine = listOf()
+            })
+        }
+    }, containerColor = Color(0xFF000547)
     ) { contentPadding ->
         Column(
             Modifier
@@ -77,10 +77,9 @@ fun ListRoutineScreen(
                     .fillMaxWidth()
                     .padding(8.dp),
                 style = TextStyle(
-                    fontSize = 36.sp,
-                    textAlign = TextAlign.Center
+                    fontSize = 36.sp, textAlign = TextAlign.Center
                 ),
-                color = Color(244,244,251),
+                color = Color(244, 244, 251),
                 fontWeight = FontWeight.Bold
             )
             LazyColumn(
@@ -100,8 +99,8 @@ fun ListRoutineScreen(
                                 selectedRoutine = mutList.toList()
                             }
                         },
-                       onClick = {
-                           navController.navigate(Screen.RoutineDetails.createRoute(routine.id))
+                        onClick = {
+                            navController.navigate(Screen.RoutineDetails.createRoute(routine.id))
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))

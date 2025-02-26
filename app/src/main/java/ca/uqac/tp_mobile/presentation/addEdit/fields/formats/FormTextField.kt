@@ -1,4 +1,4 @@
-package ca.uqac.tp_mobile.presentation.formAdd.fields.formats
+package ca.uqac.tp_mobile.presentation.addEdit.fields.formats
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +31,9 @@ fun FormTextField(value: String, onValueChange: (String) -> Unit, placeholder: S
             value = value,
             onValueChange = onValueChange,
             textStyle = TextStyle(color = Color(0xFF000547)),
-            modifier = Modifier.fillMaxWidth().padding(start = 16.dp)  // Aligner correctement le texte
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp)  // Aligner correctement le texte
         )
     }
 }

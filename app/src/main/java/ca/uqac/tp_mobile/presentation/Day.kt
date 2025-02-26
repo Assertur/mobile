@@ -22,6 +22,7 @@ fun List<Day>.formatDaysForShortDisplay(): String {
         else -> joinToString(" ") { it.shortLabel }
     }
 }
+
 /**
  * Prend une liste de jours et la formatte en chaîne de caractères pour afficher tous les labels
  */

@@ -36,26 +36,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.R
-import ca.uqac.tp_mobile.component.BottomActionBarWithModification
-import ca.uqac.tp_mobile.component.RoutinePresentationField
 import ca.uqac.tp_mobile.navigation.Screen
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.presentation.components.BottomActionBarWithModification
+import ca.uqac.tp_mobile.presentation.components.RoutinePresentationField
 import ca.uqac.tp_mobile.presentation.formatDaysForLongDisplay
-import ca.uqac.tp_mobile.presentation.formatDaysForShortDisplay
-import ca.uqac.tp_mobile.presentation.getRoutineById
-import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineViewModel
-import ca.uqac.tp_mobile.presentation.listRoutine.RoutineEvent
+import ca.uqac.tp_mobile.utils.getRoutineById
 
 @Composable
 fun RoutineDetailsScreen(
     routineId: Int,
     viewModel: RoutineDetailsViewModel,
-    listRoutineViewModel: ListRoutineViewModel,
     navController: NavController
 ) {
     LaunchedEffect(routineId) {
         val routine = getRoutineById(routineId)
-        routine?.let { viewModel.setSelectedRoutine(it) }
+        routine.let { viewModel.setSelectedRoutine(it) }
     }
     val selectedRoutine by viewModel.selectedRoutine.collectAsState()
 
@@ -65,15 +61,14 @@ fun RoutineDetailsScreen(
     val secondaryColor = Color(0xFFF4F4FB)
     selectedRoutine?.let { routine: RoutineVM ->
         // TODO ? : utiliser la topbox du scaffold pour y mettre le bouton
-        // FIXME : comment mettre le scroll pour cette page ?
         Scaffold(containerColor = primaryColor, bottomBar = {
             BottomActionBarWithModification(onDeleteWithNavigation = {
-                listRoutineViewModel.onEvent(
+/*                listRoutineViewModel.onEvent(
                     RoutineEvent.Delete(routine)
-                )
+                )*/
                 navController.navigate(Screen.ListRoutineScreen.route)
             }, onEdit = {
-                navController.navigate(Screen.FormAddRoutine.createRoute(routineId))
+                navController.navigate(Screen.AddEditRoutine.route + "?routineId=${routineId}")
             })
         }) { outerPadding ->
             Column(

@@ -1,6 +1,5 @@
-package ca.uqac.tp_mobile.presentation.formAdd.fields
+package ca.uqac.tp_mobile.presentation.addEdit.fields
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,7 +41,12 @@ fun FormField(
             field()
         }
         if (isRequired) {
-            Text("*", color = Color(0x80FF0000), modifier = Modifier.padding(start = 4.dp), fontSize = 15.sp)
+            Text(
+                "*",
+                color = Color(0x80FF0000),
+                modifier = Modifier.padding(start = 4.dp),
+                fontSize = 15.sp
+            )
         }
         Spacer(modifier = Modifier.padding(horizontal = 15.dp))
     }

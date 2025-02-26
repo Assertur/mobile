@@ -1,4 +1,4 @@
-package ca.uqac.tp_mobile.component
+package ca.uqac.tp_mobile.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

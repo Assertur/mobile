@@ -1,11 +1,9 @@
-package ca.uqac.tp_mobile.component
+package ca.uqac.tp_mobile.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,11 +23,10 @@ import ca.uqac.tp_mobile.R
 fun BottomActionBar(onDelete: () -> Unit) {
     BottomAppBar(
         modifier = Modifier
-            .fillMaxWidth()
-        ,
+            .fillMaxWidth(),
         containerColor = Color(0xFF00141F)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -42,9 +39,13 @@ fun BottomActionBar(onDelete: () -> Unit) {
                         disabledContentColor = Color.Gray
                     )
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.outline_delete), contentDescription = "Delete")
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_delete),
+                        contentDescription = "Delete"
+                    )
                 }
-                Text("Supprimer",
+                Text(
+                    "Supprimer",
                     style = TextStyle(
                         fontSize = 20.sp,
                         color = Color(0xFFF4F4FB)

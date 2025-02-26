@@ -15,8 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ca.uqac.tp_mobile.navigation.Screen
-import ca.uqac.tp_mobile.presentation.formAdd.FormAddRoutineScreen
-import ca.uqac.tp_mobile.presentation.formAdd.FormAddRoutineViewModel
+import ca.uqac.tp_mobile.presentation.addEdit.AddEditRoutineViewModel
+import ca.uqac.tp_mobile.presentation.addEdit.AddEditStoryScreen
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineScreen
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineViewModel
 import ca.uqac.tp_mobile.presentation.routineDetails.RoutineDetailsScreen
@@ -30,40 +30,43 @@ class MainActivity : ComponentActivity() {
         setContent {
             TP_MobileTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val stories = viewModel<ListRoutineViewModel>()
-                    val addStories = viewModel<FormAddRoutineViewModel>()
-                    val routine = viewModel<RoutineDetailsViewModel>()
                     val navController = rememberNavController()
+
                     NavHost(
                         navController = navController,
                         startDestination = Screen.ListRoutineScreen.route,
                         modifier = Modifier.padding(innerPadding)
 
-                    ){
-                        composable(Screen.ListRoutineScreen.route){ ListRoutineScreen(stories, navController) }
+                    ) {
+                        composable(Screen.ListRoutineScreen.route) {
+                            val routines = viewModel<ListRoutineViewModel>()
+                            ListRoutineScreen(
+                                routines,
+                                navController
+                            )
+                        }
                         composable(
-                            route = Screen.FormAddRoutine.route,
+                            route = Screen.AddEditRoutine.route + "?routineId={routineId}",
                             arguments = listOf(navArgument("routineId") {
                                 type = NavType.IntType
                                 defaultValue = -1
                             })
                         ) { backStackEntry ->
                             val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
-                            addStories.loadRoutine(routineId)
-                            FormAddRoutineScreen(
-                                addStories,
-                                navController
-                            )
+                            val routine = viewModel<AddEditRoutineViewModel> {
+                                AddEditRoutineViewModel(routineId)
+                            }
+                            AddEditStoryScreen(routine, navController)
                         }
                         composable(
                             route = Screen.RoutineDetails.route,
                             arguments = listOf(navArgument("routineId") { type = NavType.IntType })
                         ) { backStackEntry ->
+                            val routine = viewModel<RoutineDetailsViewModel>()
                             val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
                             RoutineDetailsScreen(
                                 routineId = routineId,
                                 viewModel = routine,
-                                listRoutineViewModel = stories,
                                 navController = navController
                             )
                         }
