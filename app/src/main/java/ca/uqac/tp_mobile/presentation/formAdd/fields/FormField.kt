@@ -42,7 +42,7 @@ fun FormField(
             field()
         }
         if (isRequired) {
-            Text("*", color = Color(255F, 0F, 0F, 0.5F), modifier = Modifier.padding(start = 4.dp), fontSize = 15.sp)
+            Text("*", color = Color(0x80FF0000), modifier = Modifier.padding(start = 4.dp), fontSize = 15.sp)
         }
         Spacer(modifier = Modifier.padding(horizontal = 15.dp))
     }

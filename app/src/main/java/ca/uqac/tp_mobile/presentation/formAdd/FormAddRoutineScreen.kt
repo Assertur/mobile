@@ -73,7 +73,7 @@ fun FormAddRoutineScreen(
             }
 
             if (viewModel.error.value.isNotEmpty()){
-                Text(viewModel.error.value)
+                Text(viewModel.error.value, color = Color(0xBFFF0000))
             }
 
             Text(
