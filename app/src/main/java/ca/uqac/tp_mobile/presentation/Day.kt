@@ -7,7 +7,14 @@ enum class Day(val index: Int, val label: String, val shortLabel: String) {
     JEUDI(4, "Jeudi", "Je."),
     VENDREDI(5, "Vendredi", "Ve."),
     SAMEDI(6, "Samedi", "Sa."),
-    DIMANCHE(7, "Dimanche", "Di.")
+    DIMANCHE(7, "Dimanche", "Di.");
+
+    companion object {
+        fun fromString(label: String): Day {
+            return Day.entries.find { it.label.equals(label, ignoreCase = true) }
+                ?: throw IllegalArgumentException("Jour non valide: $label")
+        }
+    }
 }
 
 /**
