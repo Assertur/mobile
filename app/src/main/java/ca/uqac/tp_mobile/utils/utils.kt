@@ -1,11 +1,10 @@
 package ca.uqac.tp_mobile.utils
 
-import ca.uqac.tp_mobile.presentation.Day
-import ca.uqac.tp_mobile.presentation.Priority
+
 import ca.uqac.tp_mobile.presentation.RoutineVM
 
-private val routineList: MutableList<RoutineVM> = mutableListOf(
-    RoutineVM(
+private val routineList: MutableList<RoutineVM> = mutableListOf()
+    /*RoutineVM(
         id = 1,
         title = "Routine 1",
         description = "Séance du matin",
@@ -86,7 +85,7 @@ private val routineList: MutableList<RoutineVM> = mutableListOf(
         location = "Parc",
         priority = Priority.BASSE
     )
-)
+)*/
 
 fun getRoutines(): List<RoutineVM> {
     return routineList

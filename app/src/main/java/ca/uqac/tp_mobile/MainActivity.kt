@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
+import ca.uqac.tp_mobile.data.RoutineDatabase
 import ca.uqac.tp_mobile.navigation.Screen
 import ca.uqac.tp_mobile.presentation.addEdit.AddEditRoutineViewModel
 import ca.uqac.tp_mobile.presentation.addEdit.AddEditStoryScreen
@@ -24,6 +26,13 @@ import ca.uqac.tp_mobile.presentation.routineDetails.RoutineDetailsViewModel
 import ca.uqac.tp_mobile.ui.theme.TP_MobileTheme
 
 class MainActivity : ComponentActivity() {
+    private val db by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            RoutineDatabase::class.java,
+            RoutineDatabase.DATABASE_NAME
+        ).build()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,7 +48,9 @@ class MainActivity : ComponentActivity() {
 
                     ) {
                         composable(Screen.ListRoutineScreen.route) {
-                            val routines = viewModel<ListRoutineViewModel>()
+                            val routines = viewModel<ListRoutineViewModel>{
+                                ListRoutineViewModel(db.dao)
+                            }
                             ListRoutineScreen(
                                 routines,
                                 navController
@@ -54,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
                             val routine = viewModel<AddEditRoutineViewModel> {
-                                AddEditRoutineViewModel(routineId)
+                                AddEditRoutineViewModel(db.dao, routineId)
                             }
                             AddEditStoryScreen(routine, navController)
                         }
@@ -62,8 +73,10 @@ class MainActivity : ComponentActivity() {
                             route = Screen.RoutineDetails.route,
                             arguments = listOf(navArgument("routineId") { type = NavType.IntType })
                         ) { backStackEntry ->
-                            val routine = viewModel<RoutineDetailsViewModel>()
                             val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
+                            val routine = viewModel<RoutineDetailsViewModel>{
+                                RoutineDetailsViewModel(db.dao, routineId)
+                            }
                             RoutineDetailsScreen(
                                 routineId = routineId,
                                 viewModel = routine,

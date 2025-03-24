@@ -14,6 +14,17 @@ enum class Day(val index: Int, val label: String, val shortLabel: String) {
             return Day.entries.find { it.label.equals(label, ignoreCase = true) }
                 ?: throw IllegalArgumentException("Jour non valide: $label")
         }
+        private fun fromId(id : Int): Day {
+            return Day.entries.find {it.index == id}
+                ?: throw IllegalArgumentException("Jour non valide: $id")
+        }
+        fun fromIds(ids : List<Int>) : List<Day> {
+            val days : MutableList<Day> = mutableListOf()
+            ids.forEach {
+                days.add(Day.fromId(it))
+            }
+            return days.toList()
+        }
     }
 }
 
