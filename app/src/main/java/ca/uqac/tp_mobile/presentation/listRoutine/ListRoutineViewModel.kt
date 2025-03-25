@@ -5,17 +5,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.dao.RoutineDAO
+import ca.uqac.tp_mobile.domain.useCase.RoutineUseCase
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.utils.deleteRoutineFromList
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListRoutineViewModel(val dao: RoutineDAO) : ViewModel() {
-    private val _routines: MutableState<List<RoutineVM>> =
-        mutableStateOf(emptyList())
+@HiltViewModel
+class ListRoutineViewModel @Inject constructor
+    (val routineUseCase: RoutineUseCase) : ViewModel() {
+    private val _routines: MutableState<List<RoutineVM>> = mutableStateOf(emptyList())
     var routines: State<List<RoutineVM>> = _routines
     var job : Job? = null
 
@@ -26,7 +29,7 @@ class ListRoutineViewModel(val dao: RoutineDAO) : ViewModel() {
     private fun loadRoutines() {
         job?.cancel()
 
-        job = dao.getRoutines().onEach { routines ->
+        job = routineUseCase.getRoutines().onEach { routines ->
                 _routines.value = routines.map {
                     RoutineVM.fromEntity(it)
                 }
@@ -38,7 +41,7 @@ class ListRoutineViewModel(val dao: RoutineDAO) : ViewModel() {
             is RoutineEvent.Delete -> {
                 viewModelScope.launch {
                     val entity = event.routine.toEntity()
-                    dao.deleteRoutine(entity)
+                    routineUseCase.deleteRoutine(entity)
                     deleteRoutine(event.routine)
                 }
             }
@@ -47,7 +50,7 @@ class ListRoutineViewModel(val dao: RoutineDAO) : ViewModel() {
 
     private fun deleteRoutine(routine: RoutineVM) {
         _routines.value =
-            _routines.value.filter { it != routine } // FIXME : tout l'objet ou juste l'id ?
+            _routines.value.filter { it != routine }
         deleteRoutineFromList(routine)
     }
 

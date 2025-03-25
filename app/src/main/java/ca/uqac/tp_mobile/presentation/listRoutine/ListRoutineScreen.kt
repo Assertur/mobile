@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.navigation.Screen
 import ca.uqac.tp_mobile.presentation.RoutineVM
@@ -36,7 +37,8 @@ import ca.uqac.tp_mobile.presentation.components.RoutineCard
 
 @Composable
 fun ListRoutineScreen(
-    viewModel: ListRoutineViewModel, navController: NavController
+    navController: NavController,
+    viewModel: ListRoutineViewModel = hiltViewModel()
 ) {
     var selectedRoutine by remember { mutableStateOf<List<RoutineVM>>(listOf()) }
     Scaffold(floatingActionButton = {
@@ -47,7 +49,7 @@ fun ListRoutineScreen(
         }, containerColor = Color(0xFF00141F), shape = RoundedCornerShape(18.dp)) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add a story",
+                contentDescription = "Add a routine",
                 tint = Color(0xFFF4F4FB),
                 modifier = Modifier
                     .padding(20.dp)

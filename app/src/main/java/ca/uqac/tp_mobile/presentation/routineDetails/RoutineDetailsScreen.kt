@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.navigation.Screen
@@ -50,8 +51,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun RoutineDetailsScreen(
     routineId: Int,
-    viewModel: RoutineDetailsViewModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: RoutineDetailsViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(routineId) {

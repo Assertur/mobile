@@ -2,19 +2,26 @@ package ca.uqac.tp_mobile.presentation.addEdit
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.dao.RoutineDAO
+import ca.uqac.tp_mobile.domain.useCase.RoutineUseCase
 import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.Priority
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.utils.RoutineException
 import ca.uqac.tp_mobile.utils.addOrUpdateRoutine
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddEditRoutineViewModel(val dao : RoutineDAO, routineId: Int = -1) : ViewModel() {
+@HiltViewModel
+class AddEditRoutineViewModel @Inject constructor
+    (private val routineUseCase: RoutineUseCase,
+     savedStateHandle : SavedStateHandle) : ViewModel() {
     private val _routine = mutableStateOf(RoutineVM())
     val routine: State<RoutineVM> = _routine
 
@@ -22,10 +29,14 @@ class AddEditRoutineViewModel(val dao : RoutineDAO, routineId: Int = -1) : ViewM
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        val routineId = savedStateHandle.get<Int>("routineId") ?: -1
         viewModelScope.launch(Dispatchers.IO) {
-            val routineEntity = dao.getRoutine(routineId)
-            _routine.value = routineEntity?.let { RoutineVM.fromEntity(it) } ?: RoutineVM()
-
+            try {
+                val routineEntity = routineUseCase.getOneRoutine(routineId)
+                _routine.value = routineEntity.let { RoutineVM.fromEntity(it) }
+            } catch (_:RoutineException){
+                _routine.value.id = -1
+            }
         }
     }
 
@@ -66,13 +77,13 @@ class AddEditRoutineViewModel(val dao : RoutineDAO, routineId: Int = -1) : ViewM
             AddEditRoutineEvent.SaveRoutine -> {
                 viewModelScope.launch {
                     if (routine.value.title.isEmpty() || routine.value.description.isEmpty()) {
-                        _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Unable to save story"))
+                        _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Unable to save routine"))
                     } else {
                         val entity = routine.value.toEntity()
-                        if (entity.id === null){
-                            routine.value.id = dao.insertRoutine(entity).toInt()
-                        } else {
-                            dao.updateRoutine(entity)
+                        println(entity.id)
+                        routineUseCase.upsertRoutine(entity)
+                        if (entity.id !== null) {
+                            routine.value.id = entity.id!!
                         }
                         addOrUpdateRoutine(routine.value)
                         _eventFlow.emit(AddEditRoutineUiEvent.SavedRoutine)

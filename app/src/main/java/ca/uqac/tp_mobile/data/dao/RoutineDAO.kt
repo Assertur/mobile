@@ -1,4 +1,4 @@
-package ca.uqac.tp_mobile.dao
+package ca.uqac.tp_mobile.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import ca.uqac.tp_mobile.model.Routine
+import ca.uqac.tp_mobile.domain.model.Routine
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,7 +15,7 @@ interface RoutineDAO {
     fun getRoutines() : Flow<List<Routine>>
 
     @Query("SELECT * FROM routine WHERE ID = :id")
-    fun getRoutine(id: Int) : Routine?
+    suspend fun getRoutine(id: Int) : Routine?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoutine(routine: Routine): Long

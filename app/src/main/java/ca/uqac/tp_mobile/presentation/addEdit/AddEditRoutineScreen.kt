@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.navigation.Screen
@@ -49,7 +50,9 @@ import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun AddEditStoryScreen(viewModel: AddEditRoutineViewModel, navController: NavController) {
+fun AddEditRoutineScreen(
+    navController: NavController,
+    viewModel: AddEditRoutineViewModel = hiltViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -60,7 +63,7 @@ fun AddEditStoryScreen(viewModel: AddEditRoutineViewModel, navController: NavCon
             )
         }) {
             Icon(
-                imageVector = Icons.Default.Add, contentDescription = "Save Story"
+                imageVector = Icons.Default.Add, contentDescription = "Save Routine"
             )
         }
     }) { contentPadding ->
@@ -80,7 +83,7 @@ fun AddEditStoryScreen(viewModel: AddEditRoutineViewModel, navController: NavCon
                 .padding(contentPadding)
         ) {
             Text(
-                text = "Add/Edit Story",
+                text = "Add/Edit Routine",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

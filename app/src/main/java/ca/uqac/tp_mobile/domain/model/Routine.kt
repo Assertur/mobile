@@ -1,4 +1,4 @@
-package ca.uqac.tp_mobile.model
+package ca.uqac.tp_mobile.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

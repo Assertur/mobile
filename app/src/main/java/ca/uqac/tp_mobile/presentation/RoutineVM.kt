@@ -1,7 +1,7 @@
 package ca.uqac.tp_mobile.presentation
 
 import androidx.compose.ui.graphics.Color
-import ca.uqac.tp_mobile.model.Routine
+import ca.uqac.tp_mobile.domain.model.Routine
 import kotlin.random.Random
 
 enum class Priority(val value: Int, val label: String, val type: PriorityType) {
