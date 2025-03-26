@@ -19,7 +19,7 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideStoriesDatabase(context: Application): RoutineDatabase {
+    fun provideRoutinesDatabase(context: Application): RoutineDatabase {
         return Room.databaseBuilder(
             context,
             RoutineDatabase::class.java,
@@ -28,7 +28,7 @@ object AppModule {
     }
     @Provides
     @Singleton
-    fun provideStoriesUseCases(db: RoutineDatabase) : RoutineUseCase {
+    fun provideRoutinesUseCases(db: RoutineDatabase) : RoutineUseCase {
         return RoutineUseCase(
             getRoutines = GetRoutinesUseCase(db.dao),
             getOneRoutine = GetOneRoutineUseCase(db.dao),
