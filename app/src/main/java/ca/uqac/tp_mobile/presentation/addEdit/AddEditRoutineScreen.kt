@@ -21,8 +21,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.navigation.Screen
@@ -43,27 +47,43 @@ import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownCheckFi
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownRadioField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTextField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun AddEditStoryScreen(viewModel: AddEditRoutineViewModel, navController: NavController) {
-    Scaffold(floatingActionButton = {
+fun AddEditRoutineScreen(
+    navController: NavController,
+    viewModel: AddEditRoutineViewModel = hiltViewModel()) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
         FloatingActionButton(onClick = {
             navController.navigate(
-                Screen.ListRoutineScreen.route
+                viewModel.onEvent(AddEditRoutineEvent.SaveRoutine)
             )
         }) {
             Icon(
-                imageVector = Icons.Default.Add, contentDescription = "Save Story"
+                imageVector = Icons.Default.Add, contentDescription = "Save Routine"
             )
         }
     }) { contentPadding ->
+        LaunchedEffect(true) {
+            viewModel.eventFlow.collectLatest { event ->
+                if (event is AddEditRoutineUiEvent.SavedRoutine) {
+                        navController.navigate(Screen.ListRoutineScreen.route)
+                    }
+                else if (event is AddEditRoutineUiEvent.ShowMessage) {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+            }
+        }
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
             Text(
-                text = "Add/Edit Story",
+                text = "Add/Edit Routine",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

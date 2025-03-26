@@ -19,11 +19,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ca.uqac.tp_mobile.R
 import ca.uqac.tp_mobile.navigation.Screen
@@ -42,13 +46,15 @@ import ca.uqac.tp_mobile.presentation.components.BottomActionBarWithModification
 import ca.uqac.tp_mobile.presentation.components.RoutinePresentationField
 import ca.uqac.tp_mobile.presentation.formatDaysForLongDisplay
 import ca.uqac.tp_mobile.utils.getRoutineById
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun RoutineDetailsScreen(
     routineId: Int,
-    viewModel: RoutineDetailsViewModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: RoutineDetailsViewModel = hiltViewModel()
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(routineId) {
         val routine = getRoutineById(routineId)
         routine.let { viewModel.setSelectedRoutine(it) }
@@ -61,16 +67,25 @@ fun RoutineDetailsScreen(
     val secondaryColor = Color(0xFFF4F4FB)
     selectedRoutine?.let { routine: RoutineVM ->
         // TODO ? : utiliser la topbox du scaffold pour y mettre le bouton
-        Scaffold(containerColor = primaryColor, bottomBar = {
+        Scaffold(
+            containerColor = primaryColor,
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            bottomBar = {
             BottomActionBarWithModification(onDeleteWithNavigation = {
-/*                listRoutineViewModel.onEvent(
-                    RoutineEvent.Delete(routine)
-                )*/
-                navController.navigate(Screen.ListRoutineScreen.route)
+                viewModel.onEvent(DetailsRoutineEvent.Delete)
             }, onEdit = {
                 navController.navigate(Screen.AddEditRoutine.route + "?routineId=${routineId}")
             })
         }) { outerPadding ->
+            LaunchedEffect(true) {
+                viewModel.eventFlow.collectLatest { event ->
+                    if (event is DetailsRoutineUiEvent.Delete) {
+                        navController.navigate(Screen.ListRoutineScreen.route)
+                    } else if (event is DetailsRoutineUiEvent.ShowMessage) {
+                        snackbarHostState.showSnackbar(event.message)
+                    }
+                }
+            }
             Column(
                 Modifier
                     .padding(outerPadding)

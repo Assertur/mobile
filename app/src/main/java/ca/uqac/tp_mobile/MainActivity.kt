@@ -8,21 +8,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ca.uqac.tp_mobile.navigation.Screen
-import ca.uqac.tp_mobile.presentation.addEdit.AddEditRoutineViewModel
-import ca.uqac.tp_mobile.presentation.addEdit.AddEditStoryScreen
+import ca.uqac.tp_mobile.presentation.addEdit.AddEditRoutineScreen
 import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineScreen
-import ca.uqac.tp_mobile.presentation.listRoutine.ListRoutineViewModel
 import ca.uqac.tp_mobile.presentation.routineDetails.RoutineDetailsScreen
-import ca.uqac.tp_mobile.presentation.routineDetails.RoutineDetailsViewModel
 import ca.uqac.tp_mobile.ui.theme.TP_MobileTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +37,7 @@ class MainActivity : ComponentActivity() {
 
                     ) {
                         composable(Screen.ListRoutineScreen.route) {
-                            val routines = viewModel<ListRoutineViewModel>()
-                            ListRoutineScreen(
-                                routines,
-                                navController
-                            )
+                            ListRoutineScreen(navController)
                         }
                         composable(
                             route = Screen.AddEditRoutine.route + "?routineId={routineId}",
@@ -52,21 +46,15 @@ class MainActivity : ComponentActivity() {
                                 defaultValue = -1
                             })
                         ) { backStackEntry ->
-                            val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
-                            val routine = viewModel<AddEditRoutineViewModel> {
-                                AddEditRoutineViewModel(routineId)
-                            }
-                            AddEditStoryScreen(routine, navController)
+                            AddEditRoutineScreen( navController)
                         }
                         composable(
                             route = Screen.RoutineDetails.route,
                             arguments = listOf(navArgument("routineId") { type = NavType.IntType })
                         ) { backStackEntry ->
-                            val routine = viewModel<RoutineDetailsViewModel>()
                             val routineId = backStackEntry.arguments?.getInt("routineId") ?: -1
                             RoutineDetailsScreen(
                                 routineId = routineId,
-                                viewModel = routine,
                                 navController = navController
                             )
                         }
