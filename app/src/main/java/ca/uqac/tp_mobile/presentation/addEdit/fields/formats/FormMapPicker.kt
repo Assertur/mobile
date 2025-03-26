@@ -1,18 +1,16 @@
 package ca.uqac.tp_mobile.presentation.addEdit.fields.formats
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.LocationManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,72 +18,65 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
-fun FormMapPicker() {
-    var selectedLocation by remember { mutableStateOf<LatLng?>(null) }
-    var userLocation by remember { mutableStateOf<LatLng?>(null) }
+fun FormMapPicker(
+    modifier: Modifier = Modifier, onLocationSelected: (LatLng) -> Unit
+) {
+    var mapVisible by remember { mutableStateOf(false) }
+    var currentLocation by remember { mutableStateOf(LatLng(0.0, 0.0)) }
     val context = LocalContext.current
-    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    var permissionGranted by remember { mutableStateOf(false) }
 
-    // Demander la permission de localisation
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) {
-            // Obtenir la position de l'utilisateur
-            if (ContextCompat.checkSelfPermission(
-                    context, Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                location?.let {
-                    userLocation = LatLng(it.latitude, it.longitude)
+        permissionGranted = isGranted
+    }
+
+    LaunchedEffect(Unit) {
+        permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
+    // Récupération de la position utilisateur si permission accordée
+    if (permissionGranted) {
+        LaunchedEffect(Unit) {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            try {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    location?.let {
+                        currentLocation = LatLng(it.latitude, it.longitude)
+                    }
                 }
+            } catch (e: SecurityException) {
+                // Gestion de l'erreur
             }
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Carte Google Maps
-        GoogleMap(modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp),
-            cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(userLocation ?: LatLng(0.0, 0.0), 10f)
-            },
-            onMapClick = { latLng ->
-                selectedLocation = latLng
-            }) {
-            userLocation?.let { location ->
-                Marker(
-                    state = MarkerState(position = location), title = "Votre position"
-                )
-            }
-            selectedLocation?.let { location ->
-                Marker(
-                    state = MarkerState(position = location), title = "Emplacement sélectionné"
-                )
-            }
+    Column(modifier = modifier.padding(16.dp)) {
+        Button(onClick = { mapVisible = true }) {
+            Text(text = "Choisir un emplacement")
         }
 
-        // Afficher les coordonnées sélectionnées
-        selectedLocation?.let { location ->
-            Text("Latitude: ${location.latitude}, Longitude: ${location.longitude}")
-        }
-
-        // Bouton de validation
-        Button(onClick = {
-            // Traiter la sélection de l'emplacement
-        }) {
-            Text("Valider la sélection")
+        if (mapVisible) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                val cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(currentLocation, 15f)
+                }
+                GoogleMap(modifier = Modifier.fillMaxSize(),
+                    cameraPositionState = cameraPositionState,
+                    onMapClick = { latLng ->
+                        currentLocation = latLng
+                        onLocationSelected(latLng)
+                        mapVisible = false // Ferme la carte après sélection
+                    })
+            }
         }
     }
 }
