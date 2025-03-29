@@ -1,5 +1,11 @@
 package ca.uqac.tp_mobile.presentation
 
+/**
+ * Classe représentant les jours de la semaine.
+ * @param index l'index du jour dans la semaine (pour tri des jours, exemple : 1 pour lundi)
+ * @param label le nom du jour (exemple : lundi)
+ * @param shortLabel le nom court du jour (exemple : Lu.)
+ */
 enum class Day(val index: Int, val label: String, val shortLabel: String) {
     LUNDI(1, "Lundi", "Lu."),
     MARDI(2, "Mardi", "Ma."),
@@ -10,16 +16,37 @@ enum class Day(val index: Int, val label: String, val shortLabel: String) {
     DIMANCHE(7, "Dimanche", "Di.");
 
     companion object {
+
+        /**
+         * Renvoie un jour de la semaine à partir d'une chaîne de caractères.
+         * @param label le label du jour de la semaine (exemple : "Lundi")
+         * @return le jour de la semaine de la classe Day correspondant
+         * @exception IllegalArgumentException si le label précisé est incorrect
+         */
         fun fromString(label: String): Day {
             return Day.entries.find { it.label.equals(label, ignoreCase = true) }
                 ?: throw IllegalArgumentException("Jour non valide: $label")
         }
-        private fun fromId(id : Int): Day {
-            return Day.entries.find {it.index == id}
+
+        /**
+         * Renvoie un jour de la semaine à partir de son index.
+         * @param id l'index du jour de la semaine (exemple : 1 pour lundi)
+         * @return le jour de la semaine de la classe Day correspondant
+         * @exception IllegalArgumentException si l'index n'est pas compris entre 1 et 7
+         */
+        private fun fromId(id: Int): Day {
+            return Day.entries.find { it.index == id }
                 ?: throw IllegalArgumentException("Jour non valide: $id")
         }
-        fun fromIds(ids : List<Int>) : List<Day> {
-            val days : MutableList<Day> = mutableListOf()
+
+        /**
+         * Renvoie une liste de jours de la semaine à partir de leurs indexs.
+         * @param ids la liste des indexs des jours que l'on souhaite obtenir
+         * @return la liste des jours de la semaine de la classe Day correspondants
+         * @exception IllegalArgumentException si un index de la liste n'est pas compris entre 1 et 7
+         */
+        fun fromIds(ids: List<Int>): List<Day> {
+            val days: MutableList<Day> = mutableListOf()
             ids.forEach {
                 days.add(Day.fromId(it))
             }

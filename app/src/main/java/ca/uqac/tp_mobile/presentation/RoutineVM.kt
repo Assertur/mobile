@@ -4,17 +4,37 @@ import androidx.compose.ui.graphics.Color
 import ca.uqac.tp_mobile.domain.model.Routine
 import kotlin.random.Random
 
+/**
+ * Classe enum qui liste les priorités des routines (basse, moyenne, haute).
+ * @param value la valeur de la priorité (exemple : 1 pour Haute)
+ * @param label le label de la priorite (exemple : Haute)
+ * @param type le type de priorité correspondant (exemple : PriorityType.HighPriority)
+ */
 enum class Priority(val value: Int, val label: String, val type: PriorityType) {
     HAUTE(1, "Haute", HighPriority), MOYENNE(2, "Moyenne", StandardPriority), BASSE(
         3, "Basse", LowPriority
     );
 
     companion object {
+
+        /**
+         * Renvoie une priorité correspondante au label demandé.
+         * @param label le label de la priorité
+         * @return la priorité de la classe Priority correspondante
+         * @exception IllegalArgumentException si le label n'est pas dans la classe Priority
+         */
         fun fromString(label: String): Priority {
             return entries.find { it.label.equals(label, ignoreCase = true) }
                 ?: throw IllegalArgumentException("Priorité non valide: $label")
         }
-        fun fromInt(priority : Int) : Priority {
+
+        /**
+         * Renvoie une priorité correspondante à l'id (index) demandé.
+         * @param priority l'index de la priorité (entre 1 et 3, du plus haut au plus bas)
+         * @return la priorité correspondante
+         * @exception IllegalArgumentException si l'index n'est pas compris entre 1 et 3
+         */
+        fun fromInt(priority: Int): Priority {
             return when (priority) {
                 1 -> HAUTE
                 2 -> MOYENNE
@@ -25,6 +45,19 @@ enum class Priority(val value: Int, val label: String, val type: PriorityType) {
     }
 }
 
+/**
+ * Classe représentant une routine pour les viewModels.
+ * @param id son id (définit par la BD)
+ * @param title son nom (titre)
+ * @param description sa description
+ * @param day son(ses) jour(s) concerné(s) par la routine
+ * @param hour son heure
+ * @param locationName le nom de son lieu
+ * @param locationLat la latitude de son lieu
+ * @param locationLng la longitude de son lieu
+ * @param priority sa priorité
+ * @param selected vrai si elle est actuellement sélectionnée, faux sinon
+ */
 data class RoutineVM(
     var id: Int = Random.nextInt(),
     val title: String = "",
@@ -38,6 +71,9 @@ data class RoutineVM(
     var selected: Boolean = false
 ) {
 
+    /**
+     * Transforme une RoutineVM en entité Routine pour la BD.
+     */
     fun toEntity(): Routine {
         return Routine(
             id = if (id < 0) null else id,
@@ -52,8 +88,8 @@ data class RoutineVM(
         )
     }
 
-    companion object{
-        fun fromEntity(entity : Routine) : RoutineVM {
+    companion object {
+        fun fromEntity(entity: Routine): RoutineVM {
             return RoutineVM(
                 id = entity.id!!,
                 title = entity.title,
@@ -69,6 +105,9 @@ data class RoutineVM(
     }
 }
 
+/**
+ * Définit les couleurs à appliquer à la routine.
+ */
 sealed class PriorityType(
     val backgroundColor: Color, val foregroundColor: Color, val selectedColor: Color
 )
