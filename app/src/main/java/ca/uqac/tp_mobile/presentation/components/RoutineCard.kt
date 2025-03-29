@@ -94,7 +94,7 @@ fun RoutineCard(
                 Icon(Icons.Filled.LocationOn, contentDescription = "Place")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    routine.location,
+                    routine.locationName,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = routine.priority.type.foregroundColor

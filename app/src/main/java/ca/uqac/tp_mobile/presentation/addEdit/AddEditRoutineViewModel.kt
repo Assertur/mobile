@@ -51,7 +51,7 @@ class AddEditRoutineViewModel @Inject constructor
             }
 
             is AddEditRoutineEvent.EnteredLocation -> {
-                _routine.value = _routine.value.copy(location = event.location)
+                _routine.value = _routine.value.copy(locationName = event.location)
             }
 
             is AddEditRoutineEvent.EnteredHour -> {

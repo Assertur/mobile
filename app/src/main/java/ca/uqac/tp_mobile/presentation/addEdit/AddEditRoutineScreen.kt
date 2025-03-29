@@ -106,7 +106,7 @@ fun AddEditRoutineScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = viewModel.routine.value.location,
+                value = viewModel.routine.value.locationName,
                 onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredDescription(it)) },
                 label = { Text("Lieu") },
                 singleLine = true,
@@ -259,7 +259,7 @@ fun AddEditRoutineScreen(
                     isRequired = true,
                     field = {
                         FormTextField(
-                            value = viewModel.routine.value.location,
+                            value = viewModel.routine.value.locationName,
                             onValueChange = {
                                 viewModel.onEvent(
                                     AddEditRoutineEvent.EnteredLocation(

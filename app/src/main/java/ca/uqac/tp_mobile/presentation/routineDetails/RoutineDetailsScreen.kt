@@ -187,7 +187,7 @@ fun RoutineDetailsScreen(
                                 )
                             },
                             titleText = "Lieu",
-                            contentText = routine.location
+                            contentText = routine.locationName
                         )
                         // TODO : exporter ça dans un composant propre ?
                         Column {

@@ -31,7 +31,9 @@ data class RoutineVM(
     val description: String = "",
     val day: List<Day> = listOf(),
     val hour: String = "",
-    val location: String = "",
+    val locationName: String = "",
+    val locationLat: Double = 48.4177,
+    val locationLng: Double = -71.0522,
     val priority: Priority = Priority.MOYENNE,
     var selected: Boolean = false
 ) {
@@ -43,7 +45,9 @@ data class RoutineVM(
             description = description,
             day = day.map { it.index },
             hour = hour,
-            location = location,
+            locationName = locationName,
+            locationLat = locationLat,
+            locationLng = locationLng,
             priority = priority.value
         )
     }
@@ -56,7 +60,9 @@ data class RoutineVM(
                 description = entity.description,
                 day = Day.fromIds(entity.day),
                 hour = entity.hour,
-                location = entity.location,
+                locationName = entity.locationName,
+                locationLat = entity.locationLat,
+                locationLng = entity.locationLng,
                 priority = Priority.fromInt(entity.priority)
             )
         }
