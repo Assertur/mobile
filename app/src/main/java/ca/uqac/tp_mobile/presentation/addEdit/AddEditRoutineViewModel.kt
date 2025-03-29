@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.domain.useCase.RoutineUseCase
+import ca.uqac.tp_mobile.domain.useCase.RoutineUseCases
 import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.Priority
 import ca.uqac.tp_mobile.presentation.RoutineVM
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditRoutineViewModel @Inject constructor
-    (private val routineUseCase: RoutineUseCase,
+    (private val routineUseCases: RoutineUseCases,
      savedStateHandle : SavedStateHandle) : ViewModel() {
     private val _routine = mutableStateOf(RoutineVM())
     val routine: State<RoutineVM> = _routine
@@ -32,7 +32,7 @@ class AddEditRoutineViewModel @Inject constructor
         val routineId = savedStateHandle.get<Int>("routineId") ?: -1
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val routineEntity = routineUseCase.getOneRoutine(routineId)
+                val routineEntity = routineUseCases.getOneRoutine(routineId)
                 _routine.value = routineEntity.let { RoutineVM.fromEntity(it) }
             } catch (_:RoutineException){
                 _routine.value.id = -1
@@ -81,7 +81,7 @@ class AddEditRoutineViewModel @Inject constructor
                     } else {
                         val entity = routine.value.toEntity()
                         println(entity.id)
-                        routineUseCase.upsertRoutine(entity)
+                        routineUseCases.upsertRoutine(entity)
                         if (entity.id !== null) {
                             routine.value.id = entity.id!!
                         }

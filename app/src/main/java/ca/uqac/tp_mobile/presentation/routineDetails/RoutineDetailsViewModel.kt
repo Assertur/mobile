@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.domain.useCase.RoutineUseCase
+import ca.uqac.tp_mobile.domain.useCase.RoutineUseCases
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.utils.deleteRoutineFromList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RoutineDetailsViewModel @Inject constructor(
-    private val routineUseCase: RoutineUseCase,
-    savedStateHandle : SavedStateHandle
+    private val routineUseCases: RoutineUseCases,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _selectedRoutine = MutableStateFlow<RoutineVM?>(null)
     val selectedRoutine: StateFlow<RoutineVM?> = _selectedRoutine.asStateFlow()
@@ -31,7 +31,7 @@ class RoutineDetailsViewModel @Inject constructor(
     init {
         val routineId = savedStateHandle.get<Int>("routineId") ?: -1
         viewModelScope.launch(Dispatchers.IO) {
-            val routineEntity = routineUseCase.getOneRoutine(routineId)
+            val routineEntity = routineUseCases.getOneRoutine(routineId)
             _routine.value = routineEntity.let { RoutineVM.fromEntity(it) }
         }
     }
@@ -44,10 +44,10 @@ class RoutineDetailsViewModel @Inject constructor(
     }
 
     fun onEvent(event: DetailsRoutineEvent) {
-        if (event is DetailsRoutineEvent.Delete){
+        if (event is DetailsRoutineEvent.Delete) {
             viewModelScope.launch {
                 val entity = routine.value.toEntity()
-                routineUseCase.deleteRoutine(entity)
+                routineUseCases.deleteRoutine(entity)
                 deleteRoutineFromList(RoutineVM.fromEntity(entity))
                 _eventFlow.emit(DetailsRoutineUiEvent.Delete)
             }
