@@ -32,7 +32,7 @@ class RoutineDetailsViewModel @Inject constructor(
     }
 
     /**
-     * Charge la routine grâce à son ID.
+     * Charge la routine dqns le viewModel grâce à son ID.
      */
     fun fetchRoutineById(routineId: Int) {
         viewModelScope.launch {

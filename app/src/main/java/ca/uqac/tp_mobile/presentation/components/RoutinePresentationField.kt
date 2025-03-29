@@ -38,6 +38,7 @@ fun RoutinePresentationField(icon: @Composable () -> Unit, titleText: String, co
             text = contentText,
             fontSize = 18.sp,
             color = Color(0xFF000547),
+            modifier = Modifier.padding(horizontal = 25.dp, vertical = 10.dp)
         )
         HorizontalDivider(thickness = 2.dp)
     }

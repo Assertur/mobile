@@ -3,7 +3,9 @@ package ca.uqac.tp_mobile.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ca.uqac.tp_mobile.R
 
@@ -45,7 +48,7 @@ fun BottomActionBarWithModification(onDeleteWithNavigation: () -> Unit, onEdit: 
                     ), maxLines = 1, overflow = TextOverflow.Ellipsis
                 )
             }
-            // TODO : ajouter un spacer
+            Spacer(modifier = Modifier.padding(horizontal = 25.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 IconButton(
                     onClick = onEdit, colors = IconButtonColors(
