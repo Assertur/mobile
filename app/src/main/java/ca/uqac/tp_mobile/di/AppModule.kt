@@ -6,7 +6,7 @@ import ca.uqac.tp_mobile.data.RoutineDatabase
 import ca.uqac.tp_mobile.domain.useCase.DeleteRoutineUseCase
 import ca.uqac.tp_mobile.domain.useCase.GetOneRoutineUseCase
 import ca.uqac.tp_mobile.domain.useCase.GetRoutinesUseCase
-import ca.uqac.tp_mobile.domain.useCase.RoutineUseCases
+import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.domain.useCase.UpsertRoutineUseCase
 import dagger.Module
 import dagger.Provides
@@ -28,8 +28,8 @@ object AppModule {
     }
     @Provides
     @Singleton
-    fun provideRoutinesUseCases(db: RoutineDatabase) : RoutineUseCases {
-        return RoutineUseCases(
+    fun provideRoutinesUseCases(db: RoutineDatabase) : RoutinesUseCases {
+        return RoutinesUseCases(
             getRoutines = GetRoutinesUseCase(db.dao),
             getOneRoutine = GetOneRoutineUseCase(db.dao),
             upsertRoutine = UpsertRoutineUseCase(db.dao),

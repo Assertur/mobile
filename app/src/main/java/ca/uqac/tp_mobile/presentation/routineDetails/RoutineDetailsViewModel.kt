@@ -3,7 +3,7 @@ package ca.uqac.tp_mobile.presentation.routineDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.domain.useCase.RoutineUseCases
+import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.utils.RoutineException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RoutineDetailsViewModel @Inject constructor(
-    private val routineUseCases: RoutineUseCases, savedStateHandle: SavedStateHandle
+    private val routinesUseCases: RoutinesUseCases, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _selectedRoutine = MutableStateFlow<RoutineVM?>(null)
@@ -37,7 +37,7 @@ class RoutineDetailsViewModel @Inject constructor(
     fun fetchRoutineById(routineId: Int) {
         viewModelScope.launch {
             try {
-                val routineEntity = routineUseCases.getOneRoutine(routineId)
+                val routineEntity = routinesUseCases.getOneRoutine(routineId)
                 _selectedRoutine.value = RoutineVM.fromEntity(routineEntity)
             } catch (e: RoutineException) {
                 _eventFlow.emit(DetailsRoutineUiEvent.ShowMessage(e.message ?: "Unknown error"))
@@ -53,7 +53,7 @@ class RoutineDetailsViewModel @Inject constructor(
                 viewModelScope.launch {
                     val entity = _selectedRoutine.value?.toEntity()
                         ?: throw RoutineException("No routine selected")
-                    routineUseCases.deleteRoutine(entity)
+                    routinesUseCases.deleteRoutine(entity)
                     _eventFlow.emit(DetailsRoutineUiEvent.Delete)
                 }
             }

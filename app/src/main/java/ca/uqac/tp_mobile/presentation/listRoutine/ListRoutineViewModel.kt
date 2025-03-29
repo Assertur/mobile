@@ -5,9 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.domain.useCase.RoutineUseCases
+import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.presentation.RoutineVM
-import ca.uqac.tp_mobile.utils.deleteRoutineFromList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -16,11 +15,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListRoutineViewModel @Inject constructor
-    (val routineUseCases: RoutineUseCases) : ViewModel() {
+class ListRoutineViewModel @Inject constructor(private val routinesUseCases: RoutinesUseCases) :
+    ViewModel() {
     private val _routines: MutableState<List<RoutineVM>> = mutableStateOf(emptyList())
     var routines: State<List<RoutineVM>> = _routines
-    var job : Job? = null
+    var job: Job? = null
 
     init {
         loadRoutines()
@@ -29,11 +28,11 @@ class ListRoutineViewModel @Inject constructor
     private fun loadRoutines() {
         job?.cancel()
 
-        job = routineUseCases.getRoutines().onEach { routines ->
-                _routines.value = routines.map {
-                    RoutineVM.fromEntity(it)
-                }
-            }.launchIn(viewModelScope)
+        job = routinesUseCases.getRoutines().onEach { routines ->
+            _routines.value = routines.map {
+                RoutineVM.fromEntity(it)
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: RoutineEvent) {
@@ -41,7 +40,7 @@ class ListRoutineViewModel @Inject constructor
             is RoutineEvent.Delete -> {
                 viewModelScope.launch {
                     val entity = event.routine.toEntity()
-                    routineUseCases.deleteRoutine(entity)
+                    routinesUseCases.deleteRoutine(entity)
                     deleteRoutine(event.routine)
                 }
             }
@@ -49,9 +48,7 @@ class ListRoutineViewModel @Inject constructor
     }
 
     private fun deleteRoutine(routine: RoutineVM) {
-        _routines.value =
-            _routines.value.filter { it != routine }
-        deleteRoutineFromList(routine)
+        _routines.value = _routines.value.filter { it != routine }
     }
 
     fun sortRoutines() {

@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.uqac.tp_mobile.domain.useCase.RoutineUseCases
+import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.Priority
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.utils.RoutineException
-import ca.uqac.tp_mobile.utils.addOrUpdateRoutine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,9 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddEditRoutineViewModel @Inject constructor
-    (private val routineUseCases: RoutineUseCases,
-     savedStateHandle : SavedStateHandle) : ViewModel() {
+class AddEditRoutineViewModel @Inject constructor(
+    private val routinesUseCases: RoutinesUseCases, savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val _routine = mutableStateOf(RoutineVM())
     val routine: State<RoutineVM> = _routine
 
@@ -32,9 +31,9 @@ class AddEditRoutineViewModel @Inject constructor
         val routineId = savedStateHandle.get<Int>("routineId") ?: -1
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val routineEntity = routineUseCases.getOneRoutine(routineId)
+                val routineEntity = routinesUseCases.getOneRoutine(routineId)
                 _routine.value = routineEntity.let { RoutineVM.fromEntity(it) }
-            } catch (_:RoutineException){
+            } catch (_: RoutineException) {
                 _routine.value.id = -1
             }
         }
@@ -81,11 +80,11 @@ class AddEditRoutineViewModel @Inject constructor
                     } else {
                         val entity = routine.value.toEntity()
                         println(entity.id)
-                        routineUseCases.upsertRoutine(entity)
+                        routinesUseCases.upsertRoutine(entity)
                         if (entity.id !== null) {
                             routine.value.id = entity.id!!
                         }
-                        addOrUpdateRoutine(routine.value)
+                        //addOrUpdateRoutine(routine.value)
                         _eventFlow.emit(AddEditRoutineUiEvent.SavedRoutine)
                     }
                 }
@@ -93,6 +92,7 @@ class AddEditRoutineViewModel @Inject constructor
         }
     }
 }
+
 sealed interface AddEditRoutineUiEvent {
     data class ShowMessage(val message: String) : AddEditRoutineUiEvent
     data object SavedRoutine : AddEditRoutineUiEvent
