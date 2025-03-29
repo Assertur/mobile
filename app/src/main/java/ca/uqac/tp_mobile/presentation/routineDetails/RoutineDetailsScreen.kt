@@ -45,7 +45,6 @@ import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.presentation.components.BottomActionBarWithModification
 import ca.uqac.tp_mobile.presentation.components.RoutinePresentationField
 import ca.uqac.tp_mobile.presentation.formatDaysForLongDisplay
-import ca.uqac.tp_mobile.utils.getRoutineById
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -55,11 +54,25 @@ fun RoutineDetailsScreen(
     viewModel: RoutineDetailsViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(routineId) {
-        val routine = getRoutineById(routineId)
-        routine.let { viewModel.setSelectedRoutine(it) }
-    }
     val selectedRoutine by viewModel.selectedRoutine.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is DetailsRoutineUiEvent.Delete -> {
+                    navController.navigate(Screen.ListRoutineScreen.route)
+                }
+
+                is DetailsRoutineUiEvent.ShowMessage -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(routineId) {
+        viewModel.fetchRoutineById(routineId)
+    }
 
     val scrollState = rememberScrollState()
 
@@ -67,28 +80,17 @@ fun RoutineDetailsScreen(
     val secondaryColor = Color(0xFFF4F4FB)
     selectedRoutine?.let { routine: RoutineVM ->
         // TODO ? : utiliser la topbox du scaffold pour y mettre le bouton
-        Scaffold(
-            containerColor = primaryColor,
+        Scaffold(containerColor = primaryColor,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
-            BottomActionBarWithModification(onDeleteWithNavigation = {
-                viewModel.onEvent(DetailsRoutineEvent.Delete)
-            }, onEdit = {
-                navController.navigate(Screen.AddEditRoutine.route + "?routineId=${routineId}")
-            })
-        }) { outerPadding ->
-            LaunchedEffect(true) {
-                viewModel.eventFlow.collectLatest { event ->
-                    if (event is DetailsRoutineUiEvent.Delete) {
-                        navController.navigate(Screen.ListRoutineScreen.route)
-                    } else if (event is DetailsRoutineUiEvent.ShowMessage) {
-                        snackbarHostState.showSnackbar(event.message)
-                    }
-                }
-            }
+                BottomActionBarWithModification(onDeleteWithNavigation = {
+                    viewModel.onEvent(DetailsRoutineEvent.Delete)
+                }, onEdit = {
+                    navController.navigate(Screen.AddEditRoutine.route + "?routineId=${routineId}")
+                })
+            }) { outerPadding ->
             Column(
                 Modifier
-                    .padding(outerPadding)
                     .padding(horizontal = 25.dp)
                     .fillMaxSize()
             ) {
@@ -99,14 +101,14 @@ fun RoutineDetailsScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Retour", tint = secondaryColor
+                        contentDescription = "Retour",
+                        tint = secondaryColor
                     )
                 }
 
                 Text(
                     text = "Voir une routine",
-                    modifier = Modifier
-                        .padding(horizontal = 25.dp, vertical = 16.dp),
+                    modifier = Modifier.padding(horizontal = 25.dp, vertical = 16.dp),
                     style = TextStyle(
                         fontSize = 36.sp,
                         textAlign = TextAlign.Center,
@@ -118,7 +120,8 @@ fun RoutineDetailsScreen(
                     Modifier
                         .padding(outerPadding)
                         .padding(horizontal = 25.dp)
-                        .clip(RoundedCornerShape(32.dp)), containerColor = secondaryColor
+                        .clip(RoundedCornerShape(32.dp))
+                        .fillMaxSize(), containerColor = secondaryColor
                 ) { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -133,9 +136,7 @@ fun RoutineDetailsScreen(
                                     modifier = Modifier.size(24.dp),
                                     tint = primaryColor
                                 )
-                            },
-                            titleText = "Titre",
-                            contentText = routine.title
+                            }, titleText = "Titre", contentText = routine.title
                         )
 
                         RoutinePresentationField(
@@ -146,9 +147,7 @@ fun RoutineDetailsScreen(
                                     modifier = Modifier.size(24.dp),
                                     tint = primaryColor
                                 )
-                            },
-                            titleText = "Description",
-                            contentText = routine.description
+                            }, titleText = "Description", contentText = routine.description
                         )
 
                         RoutinePresentationField(
@@ -159,9 +158,7 @@ fun RoutineDetailsScreen(
                                     modifier = Modifier.size(24.dp),
                                     tint = primaryColor
                                 )
-                            },
-                            titleText = "Heure",
-                            contentText = routine.hour
+                            }, titleText = "Heure", contentText = routine.hour
                         )
 
                         RoutinePresentationField(
@@ -185,9 +182,7 @@ fun RoutineDetailsScreen(
                                     modifier = Modifier.size(24.dp),
                                     tint = primaryColor
                                 )
-                            },
-                            titleText = "Lieu",
-                            contentText = routine.locationName
+                            }, titleText = "Lieu", contentText = routine.locationName
                         )
                         // TODO : exporter ça dans un composant propre ?
                         Column {
@@ -199,8 +194,7 @@ fun RoutineDetailsScreen(
                             ) {
                                 Spacer(
                                     modifier = Modifier.padding(
-                                        horizontal = 15.dp,
-                                        vertical = 40.dp
+                                        horizontal = 15.dp, vertical = 40.dp
                                     )
                                 )
                                 Icon(
@@ -227,10 +221,8 @@ fun RoutineDetailsScreen(
                             }
                         }
                     }
-
                 }
             }
-
         }
     } ?: run {
         Text("Routine non trouvée")
