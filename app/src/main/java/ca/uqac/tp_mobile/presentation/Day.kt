@@ -52,6 +52,20 @@ enum class Day(val index: Int, val label: String, val shortLabel: String) {
             }
             return days.toList()
         }
+
+        /**
+         * Renvoie une liste d'ids à partir des indexs des jours.
+         * @param days la liste des jours des ids que l'on souhaite obtenir
+         * @return la liste des ids des jours de la semaine de la classe Day correspondants
+         * @exception IllegalArgumentException si un day de la liste n'est pas compris entre dans les valeurs possibles
+         */
+        fun toIds(days : List<Day>): List<Int> {
+            val ids: MutableList<Int> = mutableListOf()
+            days.forEach {
+                ids.add(it.index)
+            }
+            return ids.toList()
+        }
     }
 }
 

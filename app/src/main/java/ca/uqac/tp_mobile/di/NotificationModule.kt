@@ -3,9 +3,7 @@ package ca.uqac.tp_mobile.di
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,9 +18,9 @@ object NotificationModule {
     @Provides
     fun provideNotificationManager(
         @ApplicationContext context: Context
-    ): NotificationManagerCompat {
-        val notificationManager = NotificationManagerCompat.from(context)
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    ): NotificationManager {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRA MISU) {
             val mainChannel = NotificationChannel(
                 "Main channel ID", "Main channel", NotificationManager.IMPORTANCE_DEFAULT
             )
