@@ -59,6 +59,14 @@ class AddEditRoutineViewModel @Inject constructor(
                 _routine.value = _routine.value.copy(hour = event.hour)
             }
 
+            is AddEditRoutineEvent.EnteredDaily -> {
+                if (event.daily) {
+                    _routine.value = _routine.value.copy(day = Day.getAllDays())
+                } else {
+                    _routine.value = _routine.value.copy(day = listOf())
+                }
+            }
+
             is AddEditRoutineEvent.EnteredDays -> {
                 val dayToToggle = Day.fromString(event.day)
                 _routine.value = _routine.value.copy(day = _routine.value.day.let { currentDays ->
@@ -68,7 +76,6 @@ class AddEditRoutineViewModel @Inject constructor(
                         currentDays + dayToToggle
                     }
                 })
-
             }
 
             is AddEditRoutineEvent.EnteredPriority -> {

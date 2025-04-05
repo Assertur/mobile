@@ -16,6 +16,17 @@ enum class Day(val index: Int, val label: String, val shortLabel: String) {
     DIMANCHE(7, "Dimanche", "Di.");
 
     companion object {
+        fun getAllDays(): List<Day>{
+            return listOf(
+                LUNDI,
+                MARDI,
+                MERCREDI,
+                JEUDI,
+                VENDREDI,
+                SAMEDI,
+                DIMANCHE
+            )
+        }
 
         /**
          * Renvoie un jour de la semaine à partir d'une chaîne de caractères.
