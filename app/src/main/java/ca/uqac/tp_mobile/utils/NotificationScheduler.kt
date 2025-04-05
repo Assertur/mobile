@@ -23,7 +23,7 @@ class NotificationScheduler @Inject constructor(
             putExtra("routineId", routine.id)
             putExtra("message", "C'est l'heure de la routine : ${routine.title}")
         }
-
+        println("Création des notifications de la routine ${routine.id}")
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             routine.id,
@@ -68,6 +68,28 @@ class NotificationScheduler @Inject constructor(
             } catch (e: SecurityException) {
                 Log.d(null, "Can't schedule alarm, ${e.message}")
             }
+        }
+    }
+
+    fun cancelRoutineNotification(routineId: Int) {
+        val intent = Intent(context, NotificationReceiver::class.java).apply {
+            putExtra("routineId", routineId)
+        }
+        println("Suppression de la routine id :$routineId")
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            routineId,
+            intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            else PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        try {
+            alarmManager.cancel(pendingIntent) // Annule toutes les alarmes liées à ce PendingIntent
+        } catch (e: SecurityException) {
+            Log.d(null, "Can't cancel alarm, ${e.message}")
         }
     }
 }

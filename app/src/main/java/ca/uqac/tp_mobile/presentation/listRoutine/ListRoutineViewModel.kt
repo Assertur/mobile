@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.utils.NotificationScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -15,7 +16,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListRoutineViewModel @Inject constructor(private val routinesUseCases: RoutinesUseCases) :
+class ListRoutineViewModel @Inject constructor(
+    private val routinesUseCases: RoutinesUseCases,
+    private val notificationScheduler: NotificationScheduler
+    ) :
     ViewModel() {
     private val _routines: MutableState<List<RoutineVM>> = mutableStateOf(emptyList())
     var routines: State<List<RoutineVM>> = _routines
@@ -41,6 +45,7 @@ class ListRoutineViewModel @Inject constructor(private val routinesUseCases: Rou
                 viewModelScope.launch {
                     val entity = event.routine.toEntity()
                     routinesUseCases.deleteRoutine(entity)
+                    entity.id?.let { notificationScheduler.cancelRoutineNotification(it) }
                     deleteRoutine(event.routine)
                 }
             }
