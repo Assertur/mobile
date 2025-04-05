@@ -22,7 +22,7 @@ object NotificationModule {
         @ApplicationContext context: Context
     ): NotificationManagerCompat {
         val notificationManager = NotificationManagerCompat.from(context)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val mainChannel = NotificationChannel(
                 "Main channel ID", "Main channel", NotificationManager.IMPORTANCE_DEFAULT
             )
@@ -45,7 +45,7 @@ object NotificationModule {
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(lowPriorityChannel)
-        }
+//        }
 
         return notificationManager
     }
