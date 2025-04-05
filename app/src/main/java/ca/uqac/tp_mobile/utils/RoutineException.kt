@@ -1,4 +1,3 @@
 package ca.uqac.tp_mobile.utils
 
-class RoutineException(message: String) : Throwable(message) {
-}
+class RoutineException(message: String) : Throwable(message)

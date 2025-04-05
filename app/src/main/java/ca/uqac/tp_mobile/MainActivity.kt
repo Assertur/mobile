@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                                 defaultValue = -1
                             })
                         ) { backStackEntry ->
-                            AddEditRoutineScreen( navController)
+                            AddEditRoutineScreen(navController)
                         }
                         composable(
                             route = Screen.RoutineDetails.route,

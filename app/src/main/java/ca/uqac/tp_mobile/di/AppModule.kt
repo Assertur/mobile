@@ -19,16 +19,17 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideRoutinesDatabase(context: Application): RoutineDatabase {
+    fun provideRoutineDatabase(context: Application): RoutineDatabase {
         return Room.databaseBuilder(
             context,
             RoutineDatabase::class.java,
             RoutineDatabase.DATABASE_NAME
         ).build()
     }
+
     @Provides
     @Singleton
-    fun provideRoutinesUseCases(db: RoutineDatabase) : RoutinesUseCases {
+    fun provideRoutineUseCases(db: RoutineDatabase): RoutinesUseCases {
         return RoutinesUseCases(
             getRoutines = GetRoutinesUseCase(db.dao),
             getOneRoutine = GetOneRoutineUseCase(db.dao),

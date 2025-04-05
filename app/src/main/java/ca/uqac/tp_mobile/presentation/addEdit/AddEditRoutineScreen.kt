@@ -52,27 +52,27 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddEditRoutineScreen(
     navController: NavController,
-    viewModel: AddEditRoutineViewModel = hiltViewModel()) {
+    viewModel: AddEditRoutineViewModel = hiltViewModel()
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-        FloatingActionButton(onClick = {
-            navController.navigate(
-                viewModel.onEvent(AddEditRoutineEvent.SaveRoutine)
-            )
-        }) {
-            Icon(
-                imageVector = Icons.Default.Add, contentDescription = "Save Routine"
-            )
-        }
-    }) { contentPadding ->
+            FloatingActionButton(onClick = {
+                navController.navigate(
+                    viewModel.onEvent(AddEditRoutineEvent.SaveRoutine)
+                )
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Add, contentDescription = "Save Routine"
+                )
+            }
+        }) { contentPadding ->
         LaunchedEffect(true) {
             viewModel.eventFlow.collectLatest { event ->
                 if (event is AddEditRoutineUiEvent.SavedRoutine) {
-                        navController.navigate(Screen.ListRoutineScreen.route)
-                    }
-                else if (event is AddEditRoutineUiEvent.ShowMessage) {
+                    navController.navigate(Screen.ListRoutineScreen.route)
+                } else if (event is AddEditRoutineUiEvent.ShowMessage) {
                     snackbarHostState.showSnackbar(event.message)
                 }
             }
@@ -285,7 +285,13 @@ fun AddEditRoutineScreen(
                     field = {
                         FormDropDownRadioField(
                             value = viewModel.routine.value.priority.label,
-                            onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredPriority(it)) },
+                            onValueChange = {
+                                viewModel.onEvent(
+                                    AddEditRoutineEvent.EnteredPriority(
+                                        it
+                                    )
+                                )
+                            },
                             options = listOf("Haute", "Moyenne", "Basse"),
                             placeholder = "Priorité",
                             expanded = priorityExpanded

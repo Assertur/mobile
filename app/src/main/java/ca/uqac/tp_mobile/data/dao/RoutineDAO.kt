@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RoutineDAO {
     @Query("SELECT * FROM routine")
-    fun getRoutines() : Flow<List<Routine>>
+    fun getRoutines(): Flow<List<Routine>>
 
     @Query("SELECT * FROM routine WHERE ID = :id")
-    suspend fun getRoutine(id: Int) : Routine?
+    suspend fun getRoutine(id: Int): Routine?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoutine(routine: Routine): Long

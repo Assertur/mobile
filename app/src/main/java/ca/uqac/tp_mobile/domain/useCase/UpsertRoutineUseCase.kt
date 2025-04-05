@@ -4,7 +4,7 @@ import ca.uqac.tp_mobile.data.dao.RoutineDAO
 import ca.uqac.tp_mobile.domain.model.Routine
 import ca.uqac.tp_mobile.utils.RoutineException
 
-class UpsertRoutineUseCase (private val routineDao : RoutineDAO) {
+class UpsertRoutineUseCase(private val routineDao: RoutineDAO) {
     @Throws(RoutineException::class)
     suspend operator fun invoke(routine: Routine) {
         if (routine.title.isEmpty() || routine.description.isEmpty())
