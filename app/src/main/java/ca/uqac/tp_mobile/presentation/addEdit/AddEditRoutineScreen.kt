@@ -2,6 +2,7 @@ package ca.uqac.tp_mobile.presentation.addEdit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +15,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -124,6 +128,7 @@ fun AddEditRoutineScreen(
     val primaryTextColor = Color(0xFFF4F4FB)
 
     val hourExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val dailyExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
     val dateExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
     val priorityExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
 
@@ -229,6 +234,30 @@ fun AddEditRoutineScreen(
                 FormField(
                     icon = {
                         Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Repeat"
+                        )
+                    },
+                    isRequired = false,
+                    field = @Composable {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Quotidienne", modifier = Modifier.padding(start = 8.dp))
+                            Checkbox(
+                                checked = dailyExpanded.value,
+                                onCheckedChange = {
+                                    dailyExpanded.value = it
+                                    viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(dailyExpanded.value))
+                                }
+                            )
+                        }
+                    },
+                    onClick = { dailyExpanded.value = true }
+                )
+                FormField(
+                    icon = {
+                        Icon(
                             painter = painterResource(id = R.drawable.outline_calendar_today),
                             contentDescription = "Date",
                             modifier = Modifier.size(24.dp),
@@ -242,7 +271,8 @@ fun AddEditRoutineScreen(
                             onOptionChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredDays(it)) },
                             options = Day.entries.map { it.label },
                             placeholder = "Jour(s) de la routine",
-                            expanded = dateExpanded
+                            expanded = dateExpanded,
+                            disabled = dailyExpanded
                         )
                     },
                     onClick = { dateExpanded.value = true }

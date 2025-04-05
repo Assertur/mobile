@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -22,8 +23,10 @@ fun FormDropDownCheckField(
     onOptionChange: (String) -> Unit,
     options: List<String>,
     placeholder: String,
-    expanded: MutableState<Boolean>
+    expanded: MutableState<Boolean>,
+    disabled : MutableState<Boolean>
 ) {
+    val alpha = if (!disabled.value) 1f else 0.5f
 
     val textColor = Color(0xFF000547)
 
@@ -41,13 +44,13 @@ fun FormDropDownCheckField(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            Column {
+            Column(modifier = Modifier.alpha(alpha)) {
                 options.forEach { option ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
+                            .clickable(enabled = !disabled.value) {
                                 onOptionChange(option)  // Ajoute ou retire de la sélection
                             }
                             .padding(8.dp)
@@ -57,10 +60,10 @@ fun FormDropDownCheckField(
                             modifier = Modifier.padding(start = 8.dp),
                             color = textColor
                         )
-                        Checkbox(
+                        Checkbox (
                             checked = selectedOptions.contains(option),  // Coche la checkbox si l'option est sélectionnée
                             onCheckedChange = {
-                                onOptionChange(option)  // Met à jour la sélection
+                                if (!disabled.value) onOptionChange(option)  // Met à jour la sélection
                             }
                         )
                     }

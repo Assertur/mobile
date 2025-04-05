@@ -9,6 +9,7 @@ import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.Priority
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.utils.NotificationScheduler
 import ca.uqac.tp_mobile.utils.RoutineException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditRoutineViewModel @Inject constructor(
-    private val routinesUseCases: RoutinesUseCases, savedStateHandle: SavedStateHandle
+    private val routinesUseCases: RoutinesUseCases, savedStateHandle: SavedStateHandle,
+    private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
     private val _routine = mutableStateOf(RoutineVM())
     val routine: State<RoutineVM> = _routine
@@ -57,6 +59,14 @@ class AddEditRoutineViewModel @Inject constructor(
                 _routine.value = _routine.value.copy(hour = event.hour)
             }
 
+            is AddEditRoutineEvent.EnteredDaily -> {
+                if (event.daily) {
+                    _routine.value = _routine.value.copy(day = Day.getAllDays())
+                } else {
+                    _routine.value = _routine.value.copy(day = listOf())
+                }
+            }
+
             is AddEditRoutineEvent.EnteredDays -> {
                 val dayToToggle = Day.fromString(event.day)
                 _routine.value = _routine.value.copy(day = _routine.value.day.let { currentDays ->
@@ -66,7 +76,6 @@ class AddEditRoutineViewModel @Inject constructor(
                         currentDays + dayToToggle
                     }
                 })
-
             }
 
             is AddEditRoutineEvent.EnteredPriority -> {
@@ -79,13 +88,12 @@ class AddEditRoutineViewModel @Inject constructor(
                         _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Unable to save routine"))
                     } else {
                         val entity = routine.value.toEntity()
-                        println(entity.id)
                         routinesUseCases.upsertRoutine(entity)
                         if (entity.id !== null) {
                             routine.value.id = entity.id!!
                         }
-                        //addOrUpdateRoutine(routine.value)
                         _eventFlow.emit(AddEditRoutineUiEvent.SavedRoutine)
+                        notificationScheduler.scheduleRoutineNotification(routine.value)
                     }
                 }
             }

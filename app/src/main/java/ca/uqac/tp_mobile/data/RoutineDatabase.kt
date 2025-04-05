@@ -7,7 +7,7 @@ import ca.uqac.tp_mobile.data.dao.RoutineDAO
 import ca.uqac.tp_mobile.domain.model.Routine
 import ca.uqac.tp_mobile.utils.Converters
 
-@Database(entities = [Routine::class], version = 1)
+@Database(entities = [Routine::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class RoutineDatabase : RoomDatabase() {
 

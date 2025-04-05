@@ -19,12 +19,22 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideRoutineDatabase(context: Application): RoutineDatabase {
+    fun provideRoutinesDatabase(context: Application): RoutineDatabase {
+        /*val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE routine ADD COLUMN locationName TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE routine ADD COLUMN locationLat REAL NOT NULL DEFAULT 0.0")
+                database.execSQL("ALTER TABLE routine ADD COLUMN locationLng REAL NOT NULL DEFAULT 0.0")
+            }
+        }*/
         return Room.databaseBuilder(
             context,
             RoutineDatabase::class.java,
             RoutineDatabase.DATABASE_NAME
-        ).build()
+        )
+            //.addMigrations(MIGRATION_1_2) //faire la migration en rajoutant seulement les attributs manquants
+            //.fallbackToDestructiveMigration() //Pour supprimer la base de données et la recréer
+            .build()
     }
 
     @Provides

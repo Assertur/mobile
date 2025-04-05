@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.uqac.tp_mobile.domain.useCase.RoutinesUseCases
 import ca.uqac.tp_mobile.presentation.RoutineVM
+import ca.uqac.tp_mobile.utils.NotificationScheduler
 import ca.uqac.tp_mobile.utils.RoutineException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RoutineDetailsViewModel @Inject constructor(
-    private val routinesUseCases: RoutinesUseCases, savedStateHandle: SavedStateHandle
+    private val routinesUseCases: RoutinesUseCases,
+    savedStateHandle: SavedStateHandle,
+    private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
 
     private val _selectedRoutine = MutableStateFlow<RoutineVM?>(null)
@@ -54,6 +57,7 @@ class RoutineDetailsViewModel @Inject constructor(
                     val entity = _selectedRoutine.value?.toEntity()
                         ?: throw RoutineException("No routine selected")
                     routinesUseCases.deleteRoutine(entity)
+                    entity.id?.let { notificationScheduler.cancelRoutineNotification(it) }
                     _eventFlow.emit(DetailsRoutineUiEvent.Delete)
                 }
             }
