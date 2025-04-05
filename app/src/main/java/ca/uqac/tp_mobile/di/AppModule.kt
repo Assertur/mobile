@@ -36,9 +36,10 @@ object AppModule {
             //.fallbackToDestructiveMigration() //Pour supprimer la base de données et la recréer
             .build()
     }
+
     @Provides
     @Singleton
-    fun provideRoutinesUseCases(db: RoutineDatabase) : RoutinesUseCases {
+    fun provideRoutineUseCases(db: RoutineDatabase): RoutinesUseCases {
         return RoutinesUseCases(
             getRoutines = GetRoutinesUseCase(db.dao),
             getOneRoutine = GetOneRoutineUseCase(db.dao),
