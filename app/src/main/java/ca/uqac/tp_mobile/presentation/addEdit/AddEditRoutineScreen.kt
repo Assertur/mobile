@@ -245,10 +245,9 @@ fun AddEditRoutineScreen(
                         ) {
                             Text("Quotidienne", modifier = Modifier.padding(start = 8.dp))
                             Checkbox(
-                                checked = dailyExpanded.value,
+                                checked = viewModel.daily.value,
                                 onCheckedChange = {
-                                    dailyExpanded.value = it
-                                    viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(dailyExpanded.value))
+                                    viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(it))
                                 }
                             )
                         }
