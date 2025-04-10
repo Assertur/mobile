@@ -14,13 +14,14 @@ class DeleteRoutineUseCaseTest {
 
     @Before
     fun setUp () {
+        dao.clear()
         deleteRoutineUseCase = DeleteRoutineUseCase(dao)
     }
 
     @Test
     fun `should reject if the routine doesn't exist`() {
         // Arrange
-        val routine1 = Routine(
+        val routineToAdd = Routine(
             id = 0,
             title = "title test",
             description = "routine test",
@@ -32,9 +33,9 @@ class DeleteRoutineUseCaseTest {
             priority = 1
         )
 
-        runBlocking { dao.insertRoutine(routine1) }
+        runBlocking { dao.insertRoutine(routineToAdd) }
 
-        val routine2 = Routine(
+        val routineToDelete = Routine(
             id = 1,
             title = "",
             description = "routine test",
@@ -47,7 +48,7 @@ class DeleteRoutineUseCaseTest {
         )
 
         // Act
-        runBlocking { deleteRoutineUseCase(routine2) }
+        runBlocking { deleteRoutineUseCase(routineToDelete) }
 
         // Assert
         val routines = runBlocking { dao.getRoutines().first() }
@@ -57,7 +58,7 @@ class DeleteRoutineUseCaseTest {
     @Test
     fun `routine should be deleted if the it exists`() {
         // Arrange
-        val routine1 = Routine(
+        val routineToAdd = Routine(
             id = 0,
             title = "title test",
             description = "routine test",
@@ -69,9 +70,9 @@ class DeleteRoutineUseCaseTest {
             priority = 1
         )
 
-        runBlocking { dao.insertRoutine(routine1) }
+        runBlocking { dao.insertRoutine(routineToAdd) }
 
-        val routine2 = Routine(
+        val routineToDelete = Routine(
             id = 0,
             title = "",
             description = "routine test",
@@ -84,7 +85,7 @@ class DeleteRoutineUseCaseTest {
         )
 
         // Act
-        runBlocking { deleteRoutineUseCase(routine2) }
+        runBlocking { deleteRoutineUseCase(routineToDelete) }
 
         // Assert
         val routines = runBlocking { dao.getRoutines().first() }

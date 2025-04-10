@@ -17,6 +17,7 @@ class UpsertRoutineUseCaseTest {
 
     @Before
     fun setUp () {
+        dao.clear()
         upsertRoutineUseCase = UpsertRoutineUseCase(dao)
     }
 
@@ -80,7 +81,7 @@ class UpsertRoutineUseCaseTest {
     @Test
     fun `routine should be update if id already exists`() {
         // Arrange
-        val routine1 = Routine(
+        val routineToAdd = Routine(
             id = 0,
             title = "title test",
             description = "routine test",
@@ -102,7 +103,7 @@ class UpsertRoutineUseCaseTest {
             locationLng = 0.0,
             priority = 1
         )
-        runBlocking { dao.insertRoutine(routine1) }
+        runBlocking { dao.insertRoutine(routineToAdd) }
 
         // Act
         runBlocking {upsertRoutineUseCase(routine2) }

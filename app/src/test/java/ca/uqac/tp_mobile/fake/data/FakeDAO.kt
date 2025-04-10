@@ -29,4 +29,7 @@ class FakeDAO : RoutineDAO{
         routines.removeIf { it.id == routine.id }
     }
 
+    fun clear() {
+        routines.clear()
+    }
 }
