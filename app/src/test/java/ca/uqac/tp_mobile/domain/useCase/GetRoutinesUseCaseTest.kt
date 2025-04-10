@@ -2,7 +2,6 @@ package ca.uqac.tp_mobile.domain.useCase
 
 import ca.uqac.tp_mobile.domain.model.Routine
 import ca.uqac.tp_mobile.fake.data.FakeDAO
-import ca.uqac.tp_mobile.utils.RoutineException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
