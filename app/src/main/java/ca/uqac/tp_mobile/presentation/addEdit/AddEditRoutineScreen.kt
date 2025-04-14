@@ -237,7 +237,7 @@ fun AddEditRoutineScreen(
                             viewModel.onEvent(
                                 AddEditRoutineEvent.EnteredPriority(
                                     it
-                                )
+                                ))
                             },
                             options = listOf("Haute", "Moyenne", "Basse"),
                             placeholder = "Priorité",
