@@ -45,6 +45,7 @@ import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.addEdit.fields.FormField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownCheckField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownRadioField
+import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormReminderListField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormLocationField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTextField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
@@ -170,10 +171,11 @@ fun AddEditRoutineScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Quotidienne", modifier = Modifier.padding(start = 8.dp))
-                        Checkbox(checked = dailyExpanded.value, onCheckedChange = {
-                            dailyExpanded.value = it
-                            viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(dailyExpanded.value))
-                        })
+                        Checkbox(
+                                checked = viewModel.daily.value,
+                                onCheckedChange = {
+                                    viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(it))
+                                })
                     }
                 }, onClick = { dailyExpanded.value = true })
                 FormField(icon = {
@@ -236,13 +238,32 @@ fun AddEditRoutineScreen(
                                 AddEditRoutineEvent.EnteredPriority(
                                     it
                                 )
-                            )
-                        },
-                        options = listOf("Haute", "Moyenne", "Basse"),
-                        placeholder = "Priorité",
-                        expanded = priorityExpanded
-                    )
-                }, onClick = { priorityExpanded.value = true })
+                            },
+                            options = listOf("Haute", "Moyenne", "Basse"),
+                            placeholder = "Priorité",
+                            expanded = priorityExpanded
+                        )
+                    }, onClick = { priorityExpanded.value = true }
+                )
+                FormField(
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.outline_notification),
+                            contentDescription = "Rappels",
+                            modifier = Modifier.size(24.dp),
+                            tint = iconColor
+                        )
+                    },
+                    isRequired = false,
+                    field = {
+                        FormReminderListField(
+                            reminders = viewModel.routine.value.reminders,
+                            onAdd = { viewModel.onEvent(AddEditRoutineEvent.AddReminder(it)) },
+                            onRemove = { viewModel.onEvent(AddEditRoutineEvent.RemoveReminder(it)) }
+                        )
+                    },
+                    onClick = {} // inutile ici
+                )
             }
             Spacer(modifier = Modifier.height(40.dp))
 

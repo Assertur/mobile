@@ -45,6 +45,8 @@ enum class Priority(val value: Int, val label: String, val type: PriorityType) {
     }
 }
 
+data class Reminder(val days: Int, val hours: Int, val minutes: Int)
+
 /**
  * Classe représentant une routine pour les viewModels.
  * @param id son id (définit par la BD)
@@ -57,6 +59,7 @@ enum class Priority(val value: Int, val label: String, val type: PriorityType) {
  * @param locationLng la longitude de son lieu
  * @param priority sa priorité
  * @param selected vrai si elle est actuellement sélectionnée, faux sinon
+ * @param reminders ses rappels
  */
 data class RoutineVM(
     var id: Int = Random.nextInt(),
@@ -68,7 +71,8 @@ data class RoutineVM(
     val locationLat: Double = 0.0,
     val locationLng: Double = 0.0,
     val priority: Priority = Priority.MOYENNE,
-    var selected: Boolean = false
+    var selected: Boolean = false,
+    val reminders: List<Reminder> = emptyList()
 ) {
 
     /**

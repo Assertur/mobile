@@ -16,5 +16,12 @@ class RoutineApp  : Application(){
             "Main channel ID", "Main channel", NotificationManager.IMPORTANCE_DEFAULT
         )
         manager.createNotificationChannel(mainChannel)
+
+        val highPriorityChannel = NotificationChannel(
+            "High priority routine channel ID",
+            "High priority routine channel",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        manager.createNotificationChannel(highPriorityChannel)
     }
 }

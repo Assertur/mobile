@@ -26,6 +26,8 @@ class AddEditRoutineViewModel @Inject constructor(
 ) : ViewModel() {
     private val _routine = mutableStateOf(RoutineVM())
     val routine: State<RoutineVM> = _routine
+    private val _daily = mutableStateOf(false)
+    val daily: State<Boolean> = _daily
 
     private val _eventFlow = MutableSharedFlow<AddEditRoutineUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -77,26 +79,35 @@ class AddEditRoutineViewModel @Inject constructor(
             }
 
             is AddEditRoutineEvent.EnteredDaily -> {
-                if (event.daily) {
-                    _routine.value = _routine.value.copy(day = Day.getAllDays())
-                } else {
-                    _routine.value = _routine.value.copy(day = listOf())
-                }
+                _daily.value = event.daily
+                _routine.value = _routine.value.copy(
+                    day = if (event.daily) Day.getAllDays() else listOf()
+                )
             }
 
             is AddEditRoutineEvent.EnteredDays -> {
                 val dayToToggle = Day.fromString(event.day)
-                _routine.value = _routine.value.copy(day = _routine.value.day.let { currentDays ->
+                val updatedDays = _routine.value.day.let { currentDays ->
                     if (currentDays.contains(dayToToggle)) {
                         currentDays - dayToToggle
                     } else {
                         currentDays + dayToToggle
                     }
-                })
+                }
+                _routine.value = _routine.value.copy(day = updatedDays)
+                _daily.value = updatedDays.size == Day.entries.size
             }
 
             is AddEditRoutineEvent.EnteredPriority -> {
                 _routine.value = _routine.value.copy(priority = Priority.fromString(event.priority))
+            }
+
+            is AddEditRoutineEvent.AddReminder -> {
+                _routine.value = _routine.value.copy(reminders = _routine.value.reminders + event.reminder)
+            }
+
+            is AddEditRoutineEvent.RemoveReminder -> {
+                _routine.value = _routine.value.copy(reminders = _routine.value.reminders - event.reminder)
             }
 
             AddEditRoutineEvent.SaveRoutine -> {
