@@ -52,6 +52,18 @@ class AddEditRoutineViewModel @Inject constructor(
                 _routine.value = _routine.value.copy(description = event.description)
             }
 
+            is AddEditRoutineEvent.OpenLocationModalRequested -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Chargement de la carte..."))
+                }
+            }
+
+            is AddEditRoutineEvent.NoLocationSelectedError -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Veuillez sélectionner un lieu sur la carte"))
+                }
+            }
+
             is AddEditRoutineEvent.EnteredLocation -> {
                 _routine.value = _routine.value.copy(
                     locationName = event.locationName,

@@ -48,6 +48,7 @@ import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownRadioFi
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormLocationField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTextField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -203,13 +204,21 @@ fun AddEditRoutineScreen(
                     isRequired = true,
                     field = {
                         FormLocationField(locationName = viewModel.routine.value.locationName,
+                            initialLatLng = if (viewModel.routine.value.locationLat != 0.0 && viewModel.routine.value.locationLng != 0.0) LatLng(
+                                viewModel.routine.value.locationLat,
+                                viewModel.routine.value.locationLng
+                            )
+                            else null,
+                            initialLocationName = viewModel.routine.value.locationName,
+                            onOpenMap = { viewModel.onEvent(AddEditRoutineEvent.OpenLocationModalRequested) },
                             onLocationSelected = { name, lat, lng ->
                                 viewModel.onEvent(
                                     AddEditRoutineEvent.EnteredLocation(
                                         name, lat, lng
                                     )
                                 )
-                            })
+                            },
+                            onNoSelection = { viewModel.onEvent(AddEditRoutineEvent.NoLocationSelectedError) })
                     },
                     onClick = {/* TODO : ajouter un messsage pour le temps d'ouverture de la modale*/ })
                 FormField(icon = {

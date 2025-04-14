@@ -6,6 +6,8 @@ sealed interface AddEditRoutineEvent {
     data class EnteredHour(val hour: String) : AddEditRoutineEvent
     data class EnteredDaily(val daily: Boolean) : AddEditRoutineEvent
     data class EnteredDays(val day: String) : AddEditRoutineEvent
+    data object OpenLocationModalRequested : AddEditRoutineEvent
+    data object NoLocationSelectedError : AddEditRoutineEvent
     data class EnteredLocation(
         val locationName: String, val locationLat: Double, val locationLng: Double
     ) : AddEditRoutineEvent

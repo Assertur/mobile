@@ -18,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +39,11 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun FormLocationField(
     modifier: Modifier = Modifier,
     locationName: String,
-    onLocationSelected: (locationName: String, locationLat: Double, locationLng: Double) -> Unit
+    initialLatLng: LatLng? = null,
+    initialLocationName: String,
+    onOpenMap: () -> Unit,
+    onLocationSelected: (locationName: String, locationLat: Double, locationLng: Double) -> Unit,
+    onNoSelection: () -> Unit
 ) {
     var showMapModal by remember { mutableStateOf(false) }
 
@@ -46,7 +51,7 @@ fun FormLocationField(
         shape = RoundedCornerShape(18.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD1D4FF)),
         onClick = {
-            Log.d("FormLocationField", "Ouverture de la modale localisation")
+            onOpenMap()
             showMapModal = true
         }) {
         Text(
@@ -57,10 +62,15 @@ fun FormLocationField(
     }
 
     if (showMapModal) {
-        LocationPickerModal(onDismissRequest = { showMapModal = false },
+        LocationPickerModal(initialLatLng = initialLatLng,
+            initialLocationName = initialLocationName,
+            onDismissRequest = { showMapModal = false },
             onLocationSelected = { selectedName, lat, lng ->
                 onLocationSelected(selectedName, lat, lng)
                 showMapModal = false
+            },
+            onNoSelection = {
+                onNoSelection()
             })
     }
 }
@@ -68,27 +78,37 @@ fun FormLocationField(
 @Composable
 fun LocationPickerModal(
     onDismissRequest: () -> Unit,
-    onLocationSelected: (locationName: String, locationLat: Double, locationLng: Double) -> Unit
+    initialLatLng: LatLng? = null,
+    initialLocationName: String,
+    onLocationSelected: (locationName: String, locationLat: Double, locationLng: Double) -> Unit,
+    onNoSelection: () -> Unit
 ) {
-    var query by remember { mutableStateOf("") }
-    // Pour commencer centrer la carte sur l'UQAC par défaut
+    var query by remember { mutableStateOf(initialLocationName) }
+    // Pour commencer centrer la carte sur le lieu défini ou l'UQAC par défaut
+    val defaultLocation = initialLatLng ?: LatLng(48.4177, -71.0522)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(48.4177, -71.0522), 10f)
+        position = CameraPosition.fromLatLngZoom(defaultLocation, 10f)
     }
-    var selectedLatLng by remember { mutableStateOf<LatLng?>(null) }
+    var selectedLatLng by remember { mutableStateOf(initialLatLng) }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp),
+                .height(500.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 TextField(value = query,
                     onValueChange = { query = it },
                     placeholder = { Text("Nommez le lieu") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFF4F4FB),
+                        unfocusedContainerColor = Color(0xFFF4F4FB),
+                        focusedIndicatorColor = Color(0xFFD1D4FF),
+                        unfocusedIndicatorColor = Color(0xFFD1D4FF)
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -128,18 +148,23 @@ fun LocationPickerModal(
                     modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = { onDismissRequest() }) {
-                        Text("Annuler")
+                        Text("Annuler", color = Color(0xFF000547))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
-                        selectedLatLng?.let { latLng ->
-                            val locationDisplayName = query.ifBlank { "Point sélectionné" }
-                            onLocationSelected(
-                                locationDisplayName, latLng.latitude, latLng.longitude
-                            )
+                        if (selectedLatLng == null) {
+                            onNoSelection()
+                        } else {
+                            selectedLatLng!!.let { latLng ->
+                                val locationDisplayName = query.ifBlank { "Point sélectionné" }
+                                onLocationSelected(
+                                    locationDisplayName, latLng.latitude, latLng.longitude
+                                )
+                            }
                         }
-                    }) {
-                        Text("Confirmer")
+
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00141F))) {
+                        Text("Confirmer", color = Color(0xFFF4F4FB))
                     }
                 }
             }
