@@ -14,15 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -55,72 +51,9 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddEditRoutineScreen(
-    navController: NavController,
-    viewModel: AddEditRoutineViewModel = hiltViewModel()
+    navController: NavController, viewModel: AddEditRoutineViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate(
-                    viewModel.onEvent(AddEditRoutineEvent.SaveRoutine)
-                )
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Add, contentDescription = "Save Routine"
-                )
-            }
-        }) { contentPadding ->
-        LaunchedEffect(true) {
-            viewModel.eventFlow.collectLatest { event ->
-                if (event is AddEditRoutineUiEvent.SavedRoutine) {
-                    navController.navigate(Screen.ListRoutineScreen.route)
-                } else if (event is AddEditRoutineUiEvent.ShowMessage) {
-                    snackbarHostState.showSnackbar(event.message)
-                }
-            }
-        }
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-        ) {
-            Text(
-                text = "Add/Edit Routine",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                style = TextStyle(
-                    fontSize = 36.sp, textAlign = TextAlign.Center
-                )
-            )
-            OutlinedTextField(
-                value = viewModel.routine.value.title,
-                onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredTitle(it)) },
-                label = { Text("Titre") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = viewModel.routine.value.description,
-                onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredDescription(it)) },
-                label = { Text("Description") },
-                singleLine = false,
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = viewModel.routine.value.locationName,
-                onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredDescription(it)) },
-                label = { Text("Lieu") },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.headlineMedium.copy(
-                    color = viewModel.routine.value.priority.type.foregroundColor
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-    }
     val scrollState = rememberScrollState()
 
     val iconColor = Color(0xFF00141F)
@@ -132,7 +65,19 @@ fun AddEditRoutineScreen(
     val dateExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
     val priorityExpanded: MutableState<Boolean> = remember { mutableStateOf(false) }
 
-    Scaffold(containerColor = Color(0xFF000547)) { contentPadding ->
+    Scaffold(
+        containerColor = Color(0xFF000547),
+        snackbarHost = { SnackbarHost(snackbarHostState) }) { contentPadding ->
+
+        LaunchedEffect(true) {
+            viewModel.eventFlow.collectLatest { event ->
+                if (event is AddEditRoutineUiEvent.SavedRoutine) {
+                    navController.navigate(Screen.ListRoutineScreen.route)
+                } else if (event is AddEditRoutineUiEvent.ShowMessage) {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+            }
+        }
         Column(
             Modifier
                 .padding(contentPadding)
@@ -147,7 +92,8 @@ fun AddEditRoutineScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Retour", tint = primaryTextColor
+                    contentDescription = "Retour",
+                    tint = primaryTextColor
                 )
             }
 
@@ -157,8 +103,7 @@ fun AddEditRoutineScreen(
                 } else {
                     "Modifier la routine"
                 },
-                modifier = Modifier
-                    .padding(horizontal = 25.dp, vertical = 16.dp),
+                modifier = Modifier.padding(horizontal = 25.dp, vertical = 16.dp),
                 style = TextStyle(
                     fontSize = 36.sp,
                     textAlign = TextAlign.Center,
@@ -167,174 +112,131 @@ fun AddEditRoutineScreen(
                 )
             )
             Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                FormField(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_title),
-                            contentDescription = "Titre",
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
-                    },
-                    isRequired = true,
-                    field = {
-                        FormTextField(
-                            value = viewModel.routine.value.title,
-                            onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredTitle(it)) },
-                            placeholder = "Titre de la routine"
-                        )
-                    },
-                    onClick = {/* pas d'action spécifique pour ce champ */ }
-                )
-                FormField(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_subtitles),
-                            contentDescription = "Description",
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
-                    },
-                    isRequired = false,
-                    field = {
-                        FormTextField(
-                            value = viewModel.routine.value.description,
-                            onValueChange = {
-                                viewModel.onEvent(
-                                    AddEditRoutineEvent.EnteredDescription(
-                                        it
-                                    )
+                FormField(icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_title),
+                        contentDescription = "Titre",
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }, isRequired = true, field = {
+                    FormTextField(
+                        value = viewModel.routine.value.title,
+                        onValueChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredTitle(it)) },
+                        placeholder = "Titre de la routine"
+                    )
+                }, onClick = {/* pas d'action spécifique pour ce champ */ })
+                FormField(icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_subtitles),
+                        contentDescription = "Description",
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }, isRequired = false, field = {
+                    FormTextField(
+                        value = viewModel.routine.value.description, onValueChange = {
+                            viewModel.onEvent(
+                                AddEditRoutineEvent.EnteredDescription(
+                                    it
                                 )
-                            },
-                            placeholder = "Description de la routine"
-                        )
-                    },
-                    onClick = {/* pas d'action spécifique pour ce champ */ }
-                )
-                FormField(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_access_time),
-                            contentDescription = "Heure",
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
-                    },
-                    isRequired = true,
-                    field = {
-                        FormTimeField(
-                            value = viewModel.routine.value.hour,
-                            onTimeChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredHour(it)) },
-                            placeholder = "Horaire de la routine",
-                            expanded = hourExpanded
-                        )
-                    },
-                    onClick = { hourExpanded.value = true }
-                )
-                FormField(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Repeat"
-                        )
-                    },
-                    isRequired = false,
-                    field = @Composable {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Quotidienne", modifier = Modifier.padding(start = 8.dp))
-                            Checkbox(
-                                checked = dailyExpanded.value,
-                                onCheckedChange = {
-                                    dailyExpanded.value = it
-                                    viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(dailyExpanded.value))
-                                }
                             )
-                        }
-                    },
-                    onClick = { dailyExpanded.value = true }
-                )
-                FormField(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_calendar_today),
-                            contentDescription = "Date",
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
-                    },
-                    isRequired = true,
-                    field = {
-                        FormDropDownCheckField(
-                            selectedOptions = viewModel.routine.value.day.map { it.label },
-                            onOptionChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredDays(it)) },
-                            options = Day.entries.map { it.label },
-                            placeholder = "Jour(s) de la routine",
-                            expanded = dateExpanded,
-                            disabled = dailyExpanded
-                        )
-                    },
-                    onClick = { dateExpanded.value = true }
-                )
-                FormField(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_location_on),
-                            contentDescription = "Lieu",
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
-                    },
-                    isRequired = true,
-                    field = {
-                        FormTextField(
-                            value = viewModel.routine.value.locationName,
-                            onValueChange = {
-                                viewModel.onEvent(
-                                    AddEditRoutineEvent.EnteredLocation(
-                                        it
-                                    )
+                        }, placeholder = "Description de la routine"
+                    )
+                }, onClick = {/* pas d'action spécifique pour ce champ */ })
+                FormField(icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_access_time),
+                        contentDescription = "Heure",
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }, isRequired = true, field = {
+                    FormTimeField(
+                        value = viewModel.routine.value.hour,
+                        onTimeChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredHour(it)) },
+                        placeholder = "Horaire de la routine",
+                        expanded = hourExpanded
+                    )
+                }, onClick = { hourExpanded.value = true })
+                FormField(icon = {
+                    Icon(
+                        imageVector = Icons.Default.Refresh, contentDescription = "Repeat"
+                    )
+                }, isRequired = false, field = @Composable {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Quotidienne", modifier = Modifier.padding(start = 8.dp))
+                        Checkbox(checked = dailyExpanded.value, onCheckedChange = {
+                            dailyExpanded.value = it
+                            viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(dailyExpanded.value))
+                        })
+                    }
+                }, onClick = { dailyExpanded.value = true })
+                FormField(icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_calendar_today),
+                        contentDescription = "Date",
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }, isRequired = true, field = {
+                    FormDropDownCheckField(
+                        selectedOptions = viewModel.routine.value.day.map { it.label },
+                        onOptionChange = { viewModel.onEvent(AddEditRoutineEvent.EnteredDays(it)) },
+                        options = Day.entries.map { it.label },
+                        placeholder = "Jour(s) de la routine",
+                        expanded = dateExpanded,
+                        disabled = dailyExpanded
+                    )
+                }, onClick = { dateExpanded.value = true })
+                FormField(icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_location_on),
+                        contentDescription = "Lieu",
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }, isRequired = true, field = {
+                    FormTextField(
+                        value = viewModel.routine.value.locationName, onValueChange = {
+                            viewModel.onEvent(
+                                AddEditRoutineEvent.EnteredLocation(
+                                    it
                                 )
-                            },
-                            placeholder = "Localisation de la routine"
-                        )
-                    },
-                    onClick = { /**/ }
-                )
-                FormField(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_priority_high),
-                            contentDescription = "Priorité",
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
-                    },
-                    isRequired = true,
-                    field = {
-                        FormDropDownRadioField(
-                            value = viewModel.routine.value.priority.label,
-                            onValueChange = {
-                                viewModel.onEvent(
-                                    AddEditRoutineEvent.EnteredPriority(
-                                        it
-                                    )
+                            )
+                        }, placeholder = "Localisation de la routine"
+                    )
+                }, onClick = { /**/ })
+                FormField(icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_priority_high),
+                        contentDescription = "Priorité",
+                        modifier = Modifier.size(24.dp),
+                        tint = iconColor
+                    )
+                }, isRequired = true, field = {
+                    FormDropDownRadioField(
+                        value = viewModel.routine.value.priority.label,
+                        onValueChange = {
+                            viewModel.onEvent(
+                                AddEditRoutineEvent.EnteredPriority(
+                                    it
                                 )
-                            },
-                            options = listOf("Haute", "Moyenne", "Basse"),
-                            placeholder = "Priorité",
-                            expanded = priorityExpanded
-                        )
-                    }, onClick = { priorityExpanded.value = true }
-                )
+                            )
+                        },
+                        options = listOf("Haute", "Moyenne", "Basse"),
+                        placeholder = "Priorité",
+                        expanded = priorityExpanded
+                    )
+                }, onClick = { priorityExpanded.value = true })
             }
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(
                 onClick = {
                     viewModel.onEvent(AddEditRoutineEvent.SaveRoutine)
-                    navController.navigate(Screen.ListRoutineScreen.route)
                 },
                 colors = buttonDefaultsColor,
                 shape = RoundedCornerShape(18.dp),
