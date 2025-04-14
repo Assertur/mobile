@@ -6,12 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.RoutineVM
 import ca.uqac.tp_mobile.receiver.NotificationReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Calendar
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,7 +52,7 @@ class NotificationScheduler @Inject constructor(
 
                 add(Calendar.DAY_OF_YEAR, diff) // On ajuste la date
             }
-            println("calendrier : ${baseCalendar.time}")
+
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             // 🔔 Notification principale
@@ -55,7 +60,9 @@ class NotificationScheduler @Inject constructor(
                 calendar = baseCalendar,
                 alarmManager = alarmManager,
                 intent = baseIntent,
-                requestCode = routine.id, // important : un ID unique pour ne pas écraser
+                requestCode = routine.id + (targetDay * 10000), // important : un ID unique pour ne pas écraser
+                isReminder = false,
+                routine = routine
             )
 
             // 🔔 Rappels supplémentaires
@@ -85,7 +92,9 @@ class NotificationScheduler @Inject constructor(
                         calendar = reminderCalendar,
                         alarmManager = alarmManager,
                         intent = reminderIntent,
-                        requestCode = reminderRequestCode
+                        requestCode = reminderRequestCode,
+                        isReminder = true,
+                        null
                     )
                 } else {
                     Log.d("Reminder", "Rappel ignoré car dans le passé pour ${routine.title}")
@@ -98,8 +107,16 @@ class NotificationScheduler @Inject constructor(
     fun cancelRoutineNotification(routineId: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        // Annule la notif principale
-        cancelAlarm(routineId, alarmManager)
+        val daysOfWeek = listOf(0, 1, 2, 3, 4, 5, 6) // Dimanche à samedi
+        for (day in daysOfWeek) {
+            val requestCode = routineId + (day * 10000)
+            cancelAlarm(requestCode, alarmManager)
+            try {
+                WorkManager.getInstance(context).cancelUniqueWork("weekly_routine_$requestCode")
+            } catch (e:Exception) {
+                Log.d("Job","Unknown notification")
+            }
+        }
 
         // Annule tous les rappels potentiels (de 0 à 9, soit 5 rappels max)
         for (i in 0 until 5) {
@@ -121,7 +138,7 @@ class NotificationScheduler @Inject constructor(
         try {
             alarmManager.cancel(pendingIntent)
         } catch (e: SecurityException) {
-            Log.d(null, "Can't cancel alarm $requestCode, ${e.message}")
+            Log.d("Notification", "Can't cancel alarm $requestCode, ${e.message}")
         }
     }
 
@@ -130,7 +147,9 @@ class NotificationScheduler @Inject constructor(
         calendar: Calendar,
         alarmManager: AlarmManager,
         intent: Intent,
-        requestCode: Int
+        requestCode: Int,
+        isReminder : Boolean,
+        routine: RoutineVM?
     ) {
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -141,9 +160,29 @@ class NotificationScheduler @Inject constructor(
         )
 
         try {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent
-            )
+            if (isReminder) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent
+                )
+            } else {
+                val delayMillis = calendar.timeInMillis - Calendar.getInstance().timeInMillis
+                val data = workDataOf(
+                    "routineId" to (requestCode),
+                    "routineTitle" to (routine?.title ?: "None")
+                )
+                val weeklyRequest = PeriodicWorkRequestBuilder<RoutineWorker>(
+                    7, TimeUnit.DAYS
+                ).setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
+                    .setInputData(data)
+                    .build()
+
+                WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                    "weekly_routine_$requestCode",
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    weeklyRequest
+                )
+
+            }
         } catch (e: SecurityException) {
             Log.d(null, "Can't schedule alarm, ${e.message}")
         }
