@@ -68,8 +68,8 @@ data class RoutineVM(
     val day: List<Day> = listOf(),
     val hour: String = "",
     val locationName: String = "",
-    val locationLat: Double = 48.4177,
-    val locationLng: Double = -71.0522,
+    val locationLat: Double = 0.0,
+    val locationLng: Double = 0.0,
     val priority: Priority = Priority.MOYENNE,
     var selected: Boolean = false,
     val reminders: List<Reminder> = emptyList()

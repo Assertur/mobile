@@ -1,6 +1,6 @@
 # 8INF257 - Informatique mobile - Hiver 2025
 
-## Équipe 11 - Arthur CHEVREUX (CHEA17120400), Aloïs FLEURY (FLEA05010500), Ewen HAMONO (HAME02020400)
+## Équipe 5 - Arthur CHEVREUX (CHEA17120400), Aloïs FLEURY (FLEA05010500), Ewen HAMONO (HAME02020400)
 
 ### Application mobile de gestion de routines
 
