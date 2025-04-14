@@ -20,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditRoutineViewModel @Inject constructor(
-    private val routinesUseCases: RoutinesUseCases, savedStateHandle: SavedStateHandle,
+    private val routinesUseCases: RoutinesUseCases,
+    savedStateHandle: SavedStateHandle,
     private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
     private val _routine = mutableStateOf(RoutineVM())
@@ -84,20 +85,29 @@ class AddEditRoutineViewModel @Inject constructor(
 
             AddEditRoutineEvent.SaveRoutine -> {
                 viewModelScope.launch {
-                    if (routine.value.title.isEmpty() || routine.value.description.isEmpty()) {
-                        _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Unable to save routine"))
+                    if (routine.value.title.isEmpty() || routine.value.hour.isEmpty() || routine.value.day.isEmpty() || routine.value.locationName.isEmpty() || routine.value.priority.name.isEmpty()) {
+                        _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Impossible de sauvegarder la routine, tous les champs ne sont pas remplis"))
                     } else {
-                        val entity = routine.value.toEntity()
-                        routinesUseCases.upsertRoutine(entity)
-                        if (entity.id !== null) {
-                            routine.value.id = entity.id!!
+                        try {
+                            addOrUpdateRoutine(routine.value)
+                            _eventFlow.emit(AddEditRoutineUiEvent.SavedRoutine)
+                        } catch (e: Exception) {
+                            _eventFlow.emit(AddEditRoutineUiEvent.ShowMessage("Impossible de sauvegarder la routine"))
                         }
-                        _eventFlow.emit(AddEditRoutineUiEvent.SavedRoutine)
-                        notificationScheduler.scheduleRoutineNotification(routine.value)
+
                     }
                 }
             }
         }
+    }
+
+    private suspend fun addOrUpdateRoutine(routine: RoutineVM) {
+        val entity = routine.toEntity()
+        routinesUseCases.upsertRoutine(entity)
+        if (entity.id !== null) {
+            routine.id = entity.id!!
+        }
+        notificationScheduler.scheduleRoutineNotification(routine)
     }
 }
 
