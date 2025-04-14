@@ -85,6 +85,14 @@ class AddEditRoutineViewModel @Inject constructor(
                 _routine.value = _routine.value.copy(priority = Priority.fromString(event.priority))
             }
 
+            is AddEditRoutineEvent.AddReminder -> {
+                _routine.value = _routine.value.copy(reminders = _routine.value.reminders + event.reminder)
+            }
+
+            is AddEditRoutineEvent.RemoveReminder -> {
+                _routine.value = _routine.value.copy(reminders = _routine.value.reminders - event.reminder)
+            }
+
             AddEditRoutineEvent.SaveRoutine -> {
                 viewModelScope.launch {
                     if (routine.value.title.isEmpty() || routine.value.description.isEmpty()) {

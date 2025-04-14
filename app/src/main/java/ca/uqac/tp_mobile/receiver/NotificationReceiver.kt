@@ -16,7 +16,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val message = intent.getStringExtra("message") ?: "Routine à lancer"
         val notificationId = intent.getIntExtra("routineId", System.currentTimeMillis().toInt())
 
-        val builder = NotificationCompat.Builder(context, "Main channel ID")
+        val builder = NotificationCompat.Builder(context, "High priority routine channel ID")
             .setSmallIcon(android.R.drawable.ic_notification_overlay).setContentTitle("Routine")
             .setContentText(message).setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

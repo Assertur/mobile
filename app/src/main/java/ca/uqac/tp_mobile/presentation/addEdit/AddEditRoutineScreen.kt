@@ -49,6 +49,7 @@ import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.addEdit.fields.FormField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownCheckField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownRadioField
+import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormReminderListField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTextField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
 import kotlinx.coroutines.flow.collectLatest
@@ -326,6 +327,25 @@ fun AddEditRoutineScreen(
                             expanded = priorityExpanded
                         )
                     }, onClick = { priorityExpanded.value = true }
+                )
+                FormField(
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.outline_notification),
+                            contentDescription = "Rappels",
+                            modifier = Modifier.size(24.dp),
+                            tint = iconColor
+                        )
+                    },
+                    isRequired = false,
+                    field = {
+                        FormReminderListField(
+                            reminders = viewModel.routine.value.reminders,
+                            onAdd = { viewModel.onEvent(AddEditRoutineEvent.AddReminder(it)) },
+                            onRemove = { viewModel.onEvent(AddEditRoutineEvent.RemoveReminder(it)) }
+                        )
+                    },
+                    onClick = {} // inutile ici
                 )
             }
             Spacer(modifier = Modifier.height(40.dp))
