@@ -45,6 +45,7 @@ import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.addEdit.fields.FormField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownCheckField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownRadioField
+import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormLocationField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTextField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
 import kotlinx.coroutines.flow.collectLatest
@@ -198,17 +199,19 @@ fun AddEditRoutineScreen(
                         modifier = Modifier.size(24.dp),
                         tint = iconColor
                     )
-                }, isRequired = true, field = {
-                    FormTextField(
-                        value = viewModel.routine.value.locationName, onValueChange = {
-                            viewModel.onEvent(
-                                AddEditRoutineEvent.EnteredLocation(
-                                    it
+                },
+                    isRequired = true,
+                    field = {
+                        FormLocationField(locationName = viewModel.routine.value.locationName,
+                            onLocationSelected = { name, lat, lng ->
+                                viewModel.onEvent(
+                                    AddEditRoutineEvent.EnteredLocation(
+                                        name, lat, lng
+                                    )
                                 )
-                            )
-                        }, placeholder = "Localisation de la routine"
-                    )
-                }, onClick = { /**/ })
+                            })
+                    },
+                    onClick = {/* TODO : ajouter un messsage pour le temps d'ouverture de la modale*/ })
                 FormField(icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_priority_high),
