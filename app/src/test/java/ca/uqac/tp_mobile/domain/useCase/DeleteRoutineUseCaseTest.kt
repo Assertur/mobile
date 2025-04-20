@@ -6,14 +6,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class DeleteRoutineUseCaseTest {
     lateinit var deleteRoutineUseCase: DeleteRoutineUseCase
     var dao = FakeDAO()
 
     @Before
-    fun setUp () {
+    fun setUp() {
         dao.clear()
         deleteRoutineUseCase = DeleteRoutineUseCase(dao)
     }
@@ -25,7 +25,7 @@ class DeleteRoutineUseCaseTest {
             id = 0,
             title = "title test",
             description = "routine test",
-            day = listOf(1,2),
+            day = listOf(1, 2),
             hour = "00:00",
             locationName = "location test",
             locationLat = 0.0,
@@ -39,7 +39,7 @@ class DeleteRoutineUseCaseTest {
             id = 1,
             title = "",
             description = "routine test",
-            day = listOf(1,2),
+            day = listOf(1, 2),
             hour = "00:00",
             locationName = "location test",
             locationLat = 0.0,
@@ -62,7 +62,7 @@ class DeleteRoutineUseCaseTest {
             id = 0,
             title = "title test",
             description = "routine test",
-            day = listOf(1,2),
+            day = listOf(1, 2),
             hour = "00:00",
             locationName = "location test",
             locationLat = 0.0,
@@ -76,7 +76,7 @@ class DeleteRoutineUseCaseTest {
             id = 0,
             title = "",
             description = "routine test",
-            day = listOf(1,2),
+            day = listOf(1, 2),
             hour = "00:00",
             locationName = "location test",
             locationLat = 0.0,

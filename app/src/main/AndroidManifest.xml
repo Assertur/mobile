@@ -30,7 +30,9 @@
             android:value="${MAPS_API_KEY}" />
 
         <!-- Notifications -->
-        <receiver android:name=".receiver.NotificationReceiver" android:exported="false" />
+        <receiver
+            android:name=".receiver.NotificationReceiver"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"

@@ -5,7 +5,7 @@ import ca.uqac.tp_mobile.domain.model.Routine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeDAO : RoutineDAO{
+class FakeDAO : RoutineDAO {
 
     private val routines = mutableListOf<Routine>()
 

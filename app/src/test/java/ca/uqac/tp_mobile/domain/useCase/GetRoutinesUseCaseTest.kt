@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class GetRoutinesUseCaseTest {
 
@@ -14,7 +14,7 @@ class GetRoutinesUseCaseTest {
     var dao = FakeDAO()
 
     @Before
-    fun setUp () {
+    fun setUp() {
         dao.clear()
         getRoutinesUseCase = GetRoutinesUseCase(dao)
     }
@@ -26,7 +26,7 @@ class GetRoutinesUseCaseTest {
             id = 0,
             title = "title test",
             description = "routine test",
-            day = listOf(1,2),
+            day = listOf(1, 2),
             hour = "00:00",
             locationName = "location test",
             locationLat = 0.0,
@@ -37,7 +37,7 @@ class GetRoutinesUseCaseTest {
             id = 1,
             title = "new title test",
             description = "routine test",
-            day = listOf(1,2),
+            day = listOf(1, 2),
             hour = "00:00",
             locationName = "location test",
             locationLat = 0.0,
@@ -56,6 +56,6 @@ class GetRoutinesUseCaseTest {
 
         // Assert
         val listres = runBlocking { res.first() }
-        assertEquals(listres, listOf(routineToAdd1,routineToAdd2))
+        assertEquals(listres, listOf(routineToAdd1, routineToAdd2))
     }
 }

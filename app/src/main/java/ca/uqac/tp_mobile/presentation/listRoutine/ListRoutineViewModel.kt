@@ -19,7 +19,7 @@ import javax.inject.Inject
 class ListRoutineViewModel @Inject constructor(
     private val routinesUseCases: RoutinesUseCases,
     private val notificationScheduler: NotificationScheduler
-    ) :
+) :
     ViewModel() {
     private val _routines: MutableState<List<RoutineVM>> = mutableStateOf(emptyList())
     var routines: State<List<RoutineVM>> = _routines

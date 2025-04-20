@@ -45,8 +45,8 @@ import ca.uqac.tp_mobile.presentation.Day
 import ca.uqac.tp_mobile.presentation.addEdit.fields.FormField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownCheckField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormDropDownRadioField
-import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormReminderListField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormLocationField
+import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormReminderListField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTextField
 import ca.uqac.tp_mobile.presentation.addEdit.fields.formats.FormTimeField
 import com.google.android.gms.maps.model.LatLng
@@ -172,10 +172,10 @@ fun AddEditRoutineScreen(
                     ) {
                         Text("Quotidienne", modifier = Modifier.padding(start = 8.dp))
                         Checkbox(
-                                checked = viewModel.daily.value,
-                                onCheckedChange = {
-                                    viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(it))
-                                })
+                            checked = viewModel.daily.value,
+                            onCheckedChange = {
+                                viewModel.onEvent(AddEditRoutineEvent.EnteredDaily(it))
+                            })
                     }
                 }, onClick = { dailyExpanded.value = true })
                 FormField(icon = {
@@ -237,13 +237,14 @@ fun AddEditRoutineScreen(
                             viewModel.onEvent(
                                 AddEditRoutineEvent.EnteredPriority(
                                     it
-                                ))
-                            },
-                            options = listOf("Haute", "Moyenne", "Basse"),
-                            placeholder = "Priorité",
-                            expanded = priorityExpanded
-                        )
-                    }, onClick = { priorityExpanded.value = true }
+                                )
+                            )
+                        },
+                        options = listOf("Haute", "Moyenne", "Basse"),
+                        placeholder = "Priorité",
+                        expanded = priorityExpanded
+                    )
+                }, onClick = { priorityExpanded.value = true }
                 )
                 FormField(
                     icon = {

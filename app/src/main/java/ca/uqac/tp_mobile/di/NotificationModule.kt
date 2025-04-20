@@ -19,30 +19,31 @@ object NotificationModule {
     fun provideNotificationManager(
         @ApplicationContext context: Context
     ): NotificationManager {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRA MISU) {
-            val mainChannel = NotificationChannel(
-                "Main channel ID", "Main channel", NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(mainChannel)
-            val highPriorityChannel = NotificationChannel(
-                "High priority routine channel ID",
-                "High priority routine channel",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notificationManager.createNotificationChannel(highPriorityChannel)
-            val mediumPriorityChannel = NotificationChannel(
-                "Medium priority routine channel ID",
-                "Medium priority routine channel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(mediumPriorityChannel)
-            val lowPriorityChannel = NotificationChannel(
-                "Low priority routine channel ID",
-                "Low priority routine channel",
-                NotificationManager.IMPORTANCE_LOW
-            )
-            notificationManager.createNotificationChannel(lowPriorityChannel)
+        val mainChannel = NotificationChannel(
+            "Main channel ID", "Main channel", NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(mainChannel)
+        val highPriorityChannel = NotificationChannel(
+            "High priority routine channel ID",
+            "High priority routine channel",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        notificationManager.createNotificationChannel(highPriorityChannel)
+        val mediumPriorityChannel = NotificationChannel(
+            "Medium priority routine channel ID",
+            "Medium priority routine channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(mediumPriorityChannel)
+        val lowPriorityChannel = NotificationChannel(
+            "Low priority routine channel ID",
+            "Low priority routine channel",
+            NotificationManager.IMPORTANCE_LOW
+        )
+        notificationManager.createNotificationChannel(lowPriorityChannel)
 //        }
 
         return notificationManager

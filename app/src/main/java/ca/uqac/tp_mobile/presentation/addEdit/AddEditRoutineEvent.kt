@@ -15,7 +15,7 @@ sealed interface AddEditRoutineEvent {
     ) : AddEditRoutineEvent
 
     data class EnteredPriority(val priority: String) : AddEditRoutineEvent
-    data class AddReminder(val reminder : Reminder) : AddEditRoutineEvent
-    data class RemoveReminder(val reminder : Reminder) : AddEditRoutineEvent
+    data class AddReminder(val reminder: Reminder) : AddEditRoutineEvent
+    data class RemoveReminder(val reminder: Reminder) : AddEditRoutineEvent
     data object SaveRoutine : AddEditRoutineEvent
 }

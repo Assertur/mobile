@@ -24,7 +24,7 @@ fun FormDropDownCheckField(
     options: List<String>,
     placeholder: String,
     expanded: MutableState<Boolean>,
-    disabled : MutableState<Boolean>
+    disabled: MutableState<Boolean>
 ) {
     val alpha = if (!disabled.value) 1f else 0.5f
 
@@ -60,7 +60,7 @@ fun FormDropDownCheckField(
                             modifier = Modifier.padding(start = 8.dp),
                             color = textColor
                         )
-                        Checkbox (
+                        Checkbox(
                             checked = selectedOptions.contains(option),  // Coche la checkbox si l'option est sélectionnée
                             onCheckedChange = {
                                 if (!disabled.value) onOptionChange(option)  // Met à jour la sélection

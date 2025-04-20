@@ -57,7 +57,8 @@ fun FormReminderListField(
         Button(
             onClick = {
                 if (reminders.size >= 5) {
-                    Toast.makeText(context, "Maximum de 5 rappels atteint", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Maximum de 5 rappels atteint", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     showDialog = true
                 }

@@ -29,13 +29,14 @@ class NotificationScheduler @Inject constructor(
             putExtra("routineId", routine.id)
             putExtra("message", "C'est l'heure de la routine : ${routine.title}")
         }
-        Log.d("Notification","Création des notifications de la routine ${routine.id}")
+        Log.d("Notification", "Création des notifications de la routine ${routine.id}")
 
         val routineTime = routine.hour.split(":")
-        val targetDays = Day.toIds(routine.day) // Liste des jours cibles (par exemple, [1, 3, 5] pour lundi, mercredi, vendredi)
+        val targetDays =
+            Day.toIds(routine.day) // Liste des jours cibles (par exemple, [1, 3, 5] pour lundi, mercredi, vendredi)
 
         targetDays.forEach { targetDay ->
-            Log.d("Notification","Création de notification pour le jour $targetDay")
+            Log.d("Notification", "Création de notification pour le jour $targetDay")
             // Création du calendrier pour chaque jour de la semaine
             val baseCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
                 timeInMillis = System.currentTimeMillis()
@@ -45,9 +46,11 @@ class NotificationScheduler @Inject constructor(
                 set(Calendar.MILLISECOND, 0)
 
                 // Calcule la différence de jours pour que l'alarme soit dans le futur
-                var diff = (targetDay + 1 - get(Calendar.DAY_OF_WEEK) + 7) % 7 //calendar.DAY_OF_WEEK commence par le dimanche
+                var diff =
+                    (targetDay + 1 - get(Calendar.DAY_OF_WEEK) + 7) % 7 //calendar.DAY_OF_WEEK commence par le dimanche
                 if (diff == 0 && after(this)) {
-                    diff = 7 // Si l'heure est déjà passée aujourd'hui, on programme pour la semaine suivante
+                    diff =
+                        7 // Si l'heure est déjà passée aujourd'hui, on programme pour la semaine suivante
                 }
 
                 add(Calendar.DAY_OF_YEAR, diff) // On ajuste la date
@@ -87,7 +90,7 @@ class NotificationScheduler @Inject constructor(
                 val localCalendar = Calendar.getInstance()
 
                 if (reminderCalendar.timeInMillis > localCalendar.timeInMillis) {
-                    Log.d("Reminder","Création de notification pour le rappel $reminder")
+                    Log.d("Reminder", "Création de notification pour le rappel $reminder")
                     createAlarm(
                         calendar = reminderCalendar,
                         alarmManager = alarmManager,
@@ -113,8 +116,8 @@ class NotificationScheduler @Inject constructor(
             cancelAlarm(requestCode, alarmManager)
             try {
                 WorkManager.getInstance(context).cancelUniqueWork("weekly_routine_$requestCode")
-            } catch (e:Exception) {
-                Log.d("Job","Unknown notification")
+            } catch (e: Exception) {
+                Log.d("Job", "Unknown notification")
             }
         }
 
@@ -148,7 +151,7 @@ class NotificationScheduler @Inject constructor(
         alarmManager: AlarmManager,
         intent: Intent,
         requestCode: Int,
-        isReminder : Boolean,
+        isReminder: Boolean,
         routine: RoutineVM?
     ) {
         val pendingIntent = PendingIntent.getBroadcast(

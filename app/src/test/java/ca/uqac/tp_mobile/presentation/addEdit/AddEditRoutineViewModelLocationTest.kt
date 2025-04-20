@@ -10,8 +10,8 @@ import ca.uqac.tp_mobile.fake.data.FakeContext
 import ca.uqac.tp_mobile.fake.data.FakeDAO
 import ca.uqac.tp_mobile.utils.NotificationScheduler
 import org.junit.Before
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class AddEditRoutineViewModelLocationTest {
 

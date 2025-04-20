@@ -7,7 +7,7 @@ import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class RoutineApp  : Application(){
+class RoutineApp : Application() {
     override fun onCreate() {
         super.onCreate()
 

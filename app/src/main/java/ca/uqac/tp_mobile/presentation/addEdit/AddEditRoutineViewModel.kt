@@ -103,11 +103,13 @@ class AddEditRoutineViewModel @Inject constructor(
             }
 
             is AddEditRoutineEvent.AddReminder -> {
-                _routine.value = _routine.value.copy(reminders = _routine.value.reminders + event.reminder)
+                _routine.value =
+                    _routine.value.copy(reminders = _routine.value.reminders + event.reminder)
             }
 
             is AddEditRoutineEvent.RemoveReminder -> {
-                _routine.value = _routine.value.copy(reminders = _routine.value.reminders - event.reminder)
+                _routine.value =
+                    _routine.value.copy(reminders = _routine.value.reminders - event.reminder)
             }
 
             AddEditRoutineEvent.SaveRoutine -> {

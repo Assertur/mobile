@@ -99,7 +99,8 @@ fun LocationPickerModal(
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                TextField(value = query,
+                TextField(
+                    value = query,
                     onValueChange = { query = it },
                     placeholder = { Text("Nommez le lieu") },
                     modifier = Modifier.fillMaxWidth(),
