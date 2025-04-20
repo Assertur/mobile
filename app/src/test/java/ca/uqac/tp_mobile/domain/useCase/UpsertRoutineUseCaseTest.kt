@@ -113,7 +113,7 @@ class UpsertRoutineUseCaseTest {
     }
 
     @Test
-    fun `routine should be added even if id doesn't exist`() {
+    fun `routine shouldn't be added if id doesn't exist`() {
         // Arrange
         val routine = Routine(
             id = 0,
@@ -128,6 +128,7 @@ class UpsertRoutineUseCaseTest {
         )
 
         runBlocking { upsertRoutineUseCase(routine) }
+        // Aucune exception n'est levée mais la routine n'est pas ajoutée
         val routines = runBlocking { dao.getRoutines().first() }
         assertEquals(0, routines.size)
     }
