@@ -222,7 +222,7 @@ fun AddEditRoutineScreen(
                             },
                             onNoSelection = { viewModel.onEvent(AddEditRoutineEvent.NoLocationSelectedError) })
                     },
-                    onClick = {/* TODO : ajouter un messsage pour le temps d'ouverture de la modale*/ })
+                    onClick = {})
                 FormField(icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_priority_high),
